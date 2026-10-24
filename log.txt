@@ -155,3 +155,92 @@ repo_root=D:\Hackathon\hackerrank-orchestrate-october26
 worktree=D:\Hackathon\hackerrank-orchestrate-october26
 parent_agent=none
 
+## [2026-10-24T22:12:11.342798+07:00] Implement manifest evidence normalization and temporal identity graph
+
+User Prompt (verbatim, secrets redacted):
+# Context from my IDE setup:
+
+## Active file: code/evaluation/main.py
+
+## Open tabs:
+- main.py: code/evaluation/main.py
+- conftest.py: tests/conftest.py
+- pipeline.py: code/deletion_audit/pipeline.py
+- inputs.py: code/deletion_audit/inputs.py
+- evaluator.py: code/deletion_audit/evaluator.py
+
+## My request:
+Continue implementing HackerRank Orchestrate: Ghost Data Still Exists.
+
+Read problem_statement.md, docs/dataset_analysis.md, docs/evaluation_foundation.md, and all repository agent instructions before changing code.
+
+CURRENT STATE:
+- Evaluator, strict validator, CLI, documentation, and 62 tests are implemented.
+- No actual audit solver or model calls exist yet.
+- Preserve all existing working functionality.
+
+GOAL:
+Implement a robust evidence normalization pipeline and identity resolution engine. Do not implement the full remediation planner or integrate LLM APIs in this iteration.
+
+TASK 1 — Evidence ingestion:
+- Read evidence_files.csv as the authoritative manifest.
+- Parse all observed JSON structures, SQL snapshots, heterogeneous logs, text handover records, and PDF text.
+- For PNG evidence, create an explicit pending-multimodal extraction record if reliable structured extraction is not yet available; never silently treat it as empty.
+- Preserve file_id, system_id, resource_id, collection/category, observation timestamp, file capture timestamp, original fields, scope, and raw-source provenance.
+- Distinguish direct observations, reported activity claims, missing data, and scoped negative evidence.
+- Use resource-based indexing and reuse parsed evidence across cases.
+- Fail visibly on unsupported or partially parsed formats.
+
+TASK 2 — Identity resolution:
+- Load current identities and historical identity changes.
+- Build an indexed identity graph with user_id, current/historical emails, email hashes, phone numbers, and validity intervals.
+- Match exact grounded identifiers and resource links.
+- Do not merge identities through fuzzy names or substring matches.
+- Preserve historical resource ownership even after PII has been removed.
+- Never use identity changes occurring after a case's audit_at as admissible historical knowledge.
+
+TASK 3 — Tests and diagnostics:
+- Add unit and integration tests covering every parser family.
+- Test historic-email matching, hash-only evidence, unrelated subjects, correlated log trace IDs, snapshots with replica differences, scoped empty results, and future evidence exclusion.
+- Produce a machine-readable ingestion coverage report.
+- Validate file and row coverage against the actual inventory in docs/dataset_analysis.md.
+- Report 32-sample and 518-evaluation identity-resolution coverage, without using sample_output.csv to construct answers.
+- Maintain original dataset SHA-256 integrity.
+- Run the existing 62 tests and all new tests.
+
+CONSTRAINTS:
+- Do not mutate dataset/.
+- Do not hardcode sample cases or expected outputs.
+- No frontend, vector database, microservices, or multi-agent framework.
+- Keep code modular, typed where helpful, and reproducible.
+- Preserve required logs and agent traces.
+- Do not claim the audit challenge is solved yet.
+
+DELIVERABLES:
+- Implemented ingestion and identity modules.
+- Tests and diagnostic reports.
+- Measured parser coverage and identity coverage.
+- List of unresolved evidence and actual limitations.
+- Exact commands to reproduce results.
+
+At the end, summarize changed files, test results, coverage, remaining gaps, and the recommended next implementation step.
+
+Agent Response Summary:
+Implemented manifest-driven JSON, SQL, heterogeneous-log, handover, and PDF-text normalization with explicit PNG pending records, original fields, provenance, scope, separate observation/capture times, and resource indexing. Added exact temporal identity versions and resource ownership links that retain historical associations after PII removal, preserve ambiguity, and exclude future knowledge. All 112 tests passed (62 existing plus 50 new), and the original evaluator self-test still passed; all 94 evidence inventory counts and eight non-reference CSV counts matched, with 83 parsed files, 11 pending images, and 8,163 normalized observations. Identity resolution covered 32/32 sample and 518/518 evaluation requests, with resource candidates for 29 and 509 respectively; four readbacks remain uncategorized and PDF semantics remain text-only. Verified all 103 original dataset hashes unchanged; no reference answers were parsed by ingestion/identity, no model calls were introduced, and no deletion verdicts or remediation planner were implemented.
+
+Actions:
+* Read problem_statement.md, dataset_analysis.md, evaluation_foundation.md, AGENTS.md, CLAUDE.md, and agent_trace_instructions.md before code edits.
+* Added observations.py, parsers.py, ingestion.py, identity.py, and diagnostics.py; extended inputs.py and CLI with the ingest command while preserving existing commands.
+* Added requirements.txt with pinned pypdf, three parser/identity/integration test modules, and docs/ingestion_identity.md; updated README and evaluation/usage documentation.
+* Ran python -m pytest -q (112 passed), ingest diagnostics with normalized JSONL and identity reports, original evaluator self-test, inventory comparisons, git diff --check, and turn-start/after SHA-256 checks.
+* Wrote artifacts/ingestion_coverage.json, artifacts/identity_coverage.json, and artifacts/normalized_evidence.jsonl outside the original dataset.
+* Appended this turn to the shared root log; left the structured harness trace in place without copying an active session or creating a submission archive.
+
+Context:
+tool=Codex Desktop
+model=gpt-6.1-sol
+branch=main
+repo_root=D:\Hackathon\hackerrank-orchestrate-october26
+worktree=D:\Hackathon\hackerrank-orchestrate-october26
+parent_agent=none
+
