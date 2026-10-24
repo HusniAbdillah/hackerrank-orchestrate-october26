@@ -10,19 +10,38 @@ For each request, the agent must first determine whether deletion was actually r
 
 Read [`problem_statement.md`](./problem_statement.md) for the complete challenge contract.
 
-## Implemented evaluation foundation
+## Implemented evaluation, ingestion, and identity foundation
 
 The current code provides strict CSV/JSON contract validation, sample-reference evaluation,
-and a runnable input-loading pipeline. **The audit solver is not implemented.** The pipeline
+manifest-driven evidence normalization, and temporal identity/resource indexes.
+**The full audit solver and remediation planner are not implemented.** The readiness pipeline
 reports every case as unresolved in a readiness report; it does not fabricate deletion
 statuses or produce a submission `output.csv`. No model APIs are called.
 
-Python 3.11+ is sufficient for the CLI (standard library only). To run the tests:
+Use Python 3.11+. Evaluation/readiness uses the standard library; PDF ingestion additionally
+requires the pinned `pypdf` dependency in `requirements.txt`. To install dependencies and run tests:
 
 ```text
 python -m pip install -r requirements-dev.txt
 python -m pytest -q
 ```
+
+Normalize all manifest evidence once, check every evidence file's record/line/page count
+against the reconnaissance inventory, and measure both identity-resolution splits:
+
+```text
+python code/main.py ingest --report artifacts/ingestion_coverage.json --identity-report artifacts/identity_coverage.json --normalized artifacts/normalized_evidence.jsonl
+```
+
+This parses JSON, SQL, logs, handover text, and PDF text. PNGs produce explicit pending
+multimodal records. Reports include unsupported/partial parser failures, original-dataset
+SHA-256 integrity, and identity coverage at each request's cutoff. No reference answers are
+parsed and no deletion verdicts are generated. Unsupported/partial files or inventory
+mismatches return exit code 1; expected PNG pending records are listed prominently and
+make `complete_extraction=false`, while allowing diagnostics to finish successfully.
+
+See [`docs/ingestion_identity.md`](./docs/ingestion_identity.md) for architecture, measured
+coverage, unresolved evidence, and temporal knowledge limitations.
 
 From the repository root, load each input split independently:
 
