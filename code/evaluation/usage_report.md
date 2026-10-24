@@ -21,3 +21,15 @@ the full-dataset run that produces the final predictions: provider/model names, 
 input/output and total tokens, per-request averages, per-model/overall totals, pricing
 assumptions, and total/per-request costs. Do not describe the current readiness run as
 an audit solver run.
+
+## Evidence/identity iteration
+
+The `ingest` command now normalizes all 94 manifest files (eleven images explicitly pending)
+and computes identity coverage for 32 sample and 518 evaluation requests using one shared
+parsed store. This run and all 112 tests used **zero application model calls**, zero input
+or output model tokens, and USD 0.00 in model costs. Total and per-request token/cost
+figures above therefore remain zero. Runtime dependencies are local Python and pypdf;
+there is no provider/model integration, OCR service, or multimodal API invocation.
+
+There is still no final audit prediction run or generated submission CSV. These zero-cost
+diagnostics must not be represented as a completed challenge submission.

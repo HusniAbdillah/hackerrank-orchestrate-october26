@@ -103,3 +103,58 @@ It cannot determine whether an existing citation actually proves a claim. The la
 engine must implement those features before generating predictions. No accuracy against
 hidden answers, no full-dataset solver run, and no production submission readiness are
 claimed. Original dataset bytes were verified unchanged after this work.
+
+## Evidence and identity iteration
+
+The subsequent normalization/identity iteration passes **112 tests total**, including all
+62 evaluator-foundation tests and 50 new parser, temporal identity, and integration tests.
+The original five-scenario evaluator self-test still passes. No new solver accuracy is
+claimed: this iteration produces evidence and linkage diagnostics, not audit predictions.
+
+Measured manifest coverage: **83 parsed files and 11 pending PNG files**, accounting for all
+94 entries. Per-file raw units match the reconnaissance appendix: 890 JSON domain records,
+969 SQL rows, 2,211 log lines, 46 handover lines, seven PDF text pages, and eleven PNG
+pending records. Eight non-reference CSV counts also match. There were zero unsupported
+or partially parsed files in the actual run; unsupported-format and partial-failure paths
+are exercised by synthetic tests. Reference answers are not parsed by the ingestion or
+identity modules; their bytes are hashed solely for integrity.
+
+The normalized store contains 8,163 observations: 2,648 direct, 253 scoped-negative,
+4,011 reported claims, 1,151 context, 78 metadata, 11 missing-data, and 11 pending-multimodal.
+It indexes 4,837 system/resource keys and 1,481 identifier keys. The graph contains 850
+subjects, 306 supplied identity changes, and 4,008 identifier versions, with no history-gap
+or snapshot-conflict diagnostics in this dataset.
+
+| Split | Unique identity resolution | Current email | Historical only | At least one resource candidate |
+| --- | ---: | ---: | ---: | ---: |
+| Sample | 32/32 | 29 | 3 | 29/32 |
+| Evaluation inputs | 518/518 | 418 | 100 | 509/518 |
+
+Resource candidate coverage is not proof of complete resource discovery or a deletion-status
+decision. Eleven screenshots remain pending structured extraction, four evidence_61
+readbacks have no adjudicated policy category, and PDF pages retain text rather than a
+fully interpreted business-record model. Missing resource links remain visible; no
+case-number, name, or substring heuristics fill them.
+
+Additional regression checks establish that future identity changes do not reveal old or
+new aliases, known values do not expose future interval endpoints, and post-cutoff files
+cannot backfill ownership. Hash-only ownership persists after PII removal. Conflicting exact
+subjects stay ambiguous; unrelated similar emails and matching names do not merge. All six
+log wrappers, trace/service isolation, JSON export families, SQL replica/scope schemas,
+handover text, PDF extraction failures, and PNG pending records are covered.
+
+Review also tightened empty SQL scope handling, distinct embedded snapshot timestamps,
+and earliest admissible user-reference provenance. The final run verified all 103 original
+dataset hashes unchanged. Reproduce with:
+
+```text
+python -m pip install -r requirements-dev.txt
+python -m pytest -q
+python code/main.py ingest --report artifacts/ingestion_coverage.json --identity-report artifacts/identity_coverage.json --normalized artifacts/normalized_evidence.jsonl
+python code/main.py self-test --report artifacts/evaluator_self_test.json
+```
+
+The machine-readable reports contain per-file accounting, hashes, unresolved evidence,
+per-case identity sources, and resource counts. Detailed design and limits are documented
+in `docs/ingestion_identity.md`. The next implementation stage is visual/business extraction
+and missing-link investigation, followed by scoped state reconstruction and policy decisions.

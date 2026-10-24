@@ -1,8 +1,10 @@
 # Evaluation foundation
 
-This milestone implements ingestion, contract validation, and reference comparison. It
-does not resolve identities, interpret business evidence, classify deletion intent, infer
-resource state, or generate remediation plans. No model provider or framework is required.
+This document describes the evaluator milestone: input loading, contract validation, and
+reference comparison. A subsequent evidence-normalization and temporal identity module is
+now available through `ingest`; see `ingestion_identity.md`. The evaluator itself does not
+interpret business evidence, classify deletion intent, infer resource state, or generate
+remediation plans. No model provider or framework is required.
 
 ## Separation of responsibilities
 
@@ -157,9 +159,10 @@ Use `validate --split full` rather than `evaluate --split full`, which is reject
 
 ## Remaining work
 
-The audit engine still needs evidence extraction (including embedded timestamps), identity
-history, authorization classification, scoped temporal state reconstruction, policy
-application, dependency analysis, grounded citations, and prediction serialization.
+Evidence normalization (including machine-readable observation timestamps) and identity
+history are now implemented in separate modules. The audit engine still needs PNG extraction,
+typed PDF business interpretation, authorization classification, scoped temporal state
+reconstruction, policy application, dependency analysis, grounded citations, and prediction serialization.
 No full-run prediction accuracy or model token/cost performance is claimed here. Preserve
 the raw harness trace in its existing location; final trace packaging follows
 `agent_trace_instructions.md` after the session is closed, rather than copying an active
