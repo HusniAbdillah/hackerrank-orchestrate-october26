@@ -14,20 +14,45 @@ ROOT = Path(__file__).resolve().parents[2]
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description="Deletion-audit evaluation foundation (no solver yet)")
     commands = parser.add_subparsers(dest="command", required=True)
-    for name in ("run", "validate", "evaluate", "self-test"):
+    for name in ("run", "validate", "evaluate", "self-test", "ingest"):
         command = commands.add_parser(name)
         command.add_argument("--dataset", type=Path, default=ROOT / "dataset")
-        if name != "self-test":
+        if name not in {"self-test", "ingest"}:
             command.add_argument("--split", choices=("sample", "full"), required=True)
         command.add_argument("--report", type=Path, help="Optional JSON report outside dataset/")
         if name in ("validate", "evaluate"):
             command.add_argument("--predictions", type=Path, required=True)
+        if name == "ingest":
+            command.add_argument("--inventory-doc", type=Path, default=ROOT / "docs/dataset_analysis.md")
+            command.add_argument("--normalized", type=Path, help="Optional normalized observation JSONL")
+            command.add_argument("--identity-report", type=Path, help="Optional per-case identity coverage JSON")
     args = parser.parse_args(argv)
     try:
         if args.report:
             protect_output(args.report, args.dataset,
                            *([args.predictions] if hasattr(args, "predictions") else []))
-        if args.command == "run":
+        if args.command == "ingest":
+            outputs = [p for p in (args.report, args.normalized, args.identity_report) if p]
+            if len({p.resolve() for p in outputs}) != len(outputs):
+                raise InputError("Report and normalized-output paths must be distinct")
+            for output in outputs:
+                protect_output(output, args.dataset, args.inventory_doc)
+            from .diagnostics import diagnose
+            report, identity, store = diagnose(args.dataset, args.inventory_doc)
+            if args.normalized:
+                args.normalized.parent.mkdir(parents=True, exist_ok=True)
+                with args.normalized.open("w", encoding="utf-8", newline="\n") as stream:
+                    for observation in store.observations:
+                        stream.write(json.dumps(observation.to_dict(), ensure_ascii=False, allow_nan=False) + "\n")
+            if args.identity_report:
+                args.identity_report.parent.mkdir(parents=True, exist_ok=True)
+                args.identity_report.write_text(json.dumps(identity, indent=2, ensure_ascii=False) + "\n",
+                                                encoding="utf-8", newline="\n")
+            exit_code = 0 if (report["supported_formats_successful"] and
+                              report["inventory_comparison"]["matches"] and
+                              report["csv_inventory_comparison"]["matches"] and
+                              report["dataset_integrity"]["unchanged"]) else 1
+        elif args.command == "run":
             from .pipeline import run
             report = run(args.dataset, args.split)
             exit_code = 0
