@@ -10,13 +10,29 @@ For each request, the agent must first determine whether deletion was actually r
 
 Read [`problem_statement.md`](./problem_statement.md) for the complete challenge contract.
 
-## Implemented evaluation, ingestion, and identity foundation
+## Runnable deterministic audit baseline
 
-The current code provides strict CSV/JSON contract validation, sample-reference evaluation,
-manifest-driven evidence normalization, and temporal identity/resource indexes.
-**The full audit solver and remediation planner are not implemented.** The readiness pipeline
-reports every case as unresolved in a readiness report; it does not fabricate deletion
-statuses or produce a submission `output.csv`. No model APIs are called.
+The CLI now generates cutoff-aware predictions using exact identity/resource links,
+direct readbacks, all 15 policy categories, and canonical remediation/verification steps.
+It requires no model API key. `run` remains the earlier metadata readiness command;
+use `solve` to generate predictions.
+
+```text
+python code/main.py solve --split sample --output artifacts/sample_predictions.csv --report artifacts/sample_solver_report.json
+python code/main.py evaluate --split sample --predictions artifacts/sample_predictions.csv --report artifacts/sample_evaluation.json
+python code/evaluation/diagnose_solver.py --predictions artifacts/sample_predictions.csv --solver-report artifacts/sample_solver_report.json --output artifacts/sample_mismatches.json
+python code/main.py solve --split full --output artifacts/full_predictions.csv --report artifacts/full_solver_report.json
+```
+
+The sample run writes all 32 rows, with 75% measured status accuracy and 85.546%
+step F1. Eight cases lack sufficient proof (three have no grounded resource link). They are explicitly
+abstained as `INCOMPLETE` with empty steps because the contract has no UNKNOWN value;
+these eight rows deliberately fail validation. `solve` and `evaluate` therefore return
+exit code 1 while still writing their artifacts. Exit 2 means fatal input/configuration
+failure. The current outputs are diagnostic predictions, **not submission-ready**.
+Full processing writes 518 rows; evidence gaps still block fully valid submission output.
+See [docs/audit_solver.md](docs/audit_solver.md) for measured results, exact limitations,
+per-case discrepancies, and the next accuracy priorities. No dataset file is modified.
 
 Use Python 3.11+. Evaluation/readiness uses the standard library; PDF ingestion additionally
 requires the pinned `pypdf` dependency in `requirements.txt`. To install dependencies and run tests:
