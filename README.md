@@ -10,6 +10,63 @@ For each request, the agent must first determine whether deletion was actually r
 
 Read [`problem_statement.md`](./problem_statement.md) for the complete challenge contract.
 
+## Implemented evaluation foundation
+
+The current code provides strict CSV/JSON contract validation, sample-reference evaluation,
+and a runnable input-loading pipeline. **The audit solver is not implemented.** The pipeline
+reports every case as unresolved in a readiness report; it does not fabricate deletion
+statuses or produce a submission `output.csv`. No model APIs are called.
+
+Python 3.11+ is sufficient for the CLI (standard library only). To run the tests:
+
+```text
+python -m pip install -r requirements-dev.txt
+python -m pytest -q
+```
+
+From the repository root, load each input split independently:
+
+```text
+python code/main.py run --split sample --report artifacts/sample_pipeline.json
+python code/main.py run --split full --report artifacts/full_pipeline.json
+```
+
+Evaluate **your own sample prediction file** with the public reference:
+
+```text
+python code/main.py evaluate --split sample --predictions artifacts/sample_predictions.csv --report artifacts/sample_evaluation.json
+```
+
+Validate full predictions without ground-truth access:
+
+```text
+python code/main.py validate --split full --predictions output.csv --report artifacts/full_validation.json
+```
+
+Run a controlled evaluator demonstration:
+
+```text
+python code/main.py self-test --report artifacts/evaluator_self_test.json
+```
+
+The self-test derives temporary test inputs from the public sample answers, changes
+object-key order, reverses a step array, removes/duplicates cases, and corrupts a citation.
+It is an evaluator test, **not solver performance**; its temporary CSVs are removed.
+The `run` path never reads `sample_output.csv`. The CLI deliberately rejects reference
+evaluation for the full split, for which no participant ground truth is available.
+
+`--dataset` can override the default repository-relative dataset location on each command.
+Every command prints JSON; `--report` additionally saves it outside `dataset/`. Exit codes:
+`0` for a valid artifact/successful readiness or self-test run, `1` for invalid predictions
+(diagnostic metrics are still reported), and `2` for input/configuration errors. Low accuracy
+alone does not change the exit code. `python code/evaluation/main.py` accepts the same
+subcommands as a compatibility entry point.
+
+See [`docs/evaluation_foundation.md`](./docs/evaluation_foundation.md) for exact matching
+definitions, validation limits, and architecture. Foundation results and usage are in
+[`code/evaluation/evaluation_report.md`](./code/evaluation/evaluation_report.md) and
+[`code/evaluation/usage_report.md`](./code/evaluation/usage_report.md).
+
 ---
 
 ## Quick Start
@@ -31,10 +88,10 @@ Your solution must:
 - Generate one prediction row for every request in `dataset/deletion_requests.csv`
 - Write the final predictions to `output.csv` in the repository root
 
-Run the starter Python entry point with:
+Inspect the implemented entry point with:
 
 ```bash
-python3 code/main.py
+python code/main.py --help
 ```
 
 The blank template at `dataset/output.csv` is provided as a reference. Your final generated file for submission must be the root-level `output.csv`.
