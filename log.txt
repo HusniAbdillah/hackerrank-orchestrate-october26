@@ -877,3 +877,913 @@ branch=main
 repo_root=D:\Hackathon\hackerrank-orchestrate-october26
 worktree=D:\Hackathon\hackerrank-orchestrate-october26
 parent_agent=none
+
+
+## [2026-10-25T12:20:31+07:00] SESSION START
+
+tool=Antigravity
+model=Gemini 3.8 Flash (High)
+Repo Root: D:\Hackathon\hackerrank-orchestrate-october26
+Branch: main
+Worktree: D:\Hackathon\hackerrank-orchestrate-october26
+Parent Agent: none
+Language: py
+Time Remaining: not configured
+
+## [2026-10-25T05:27:31.698594+00:00] Audit actual AI tool use, grounding and trace sufficiency
+
+User Prompt (verbatim, secrets redacted):
+# Context from my IDE setup:
+
+## Active file: docs/submission_readiness.md
+
+## Open tabs:
+- submission_readiness.md: docs/submission_readiness.md
+- ai_investigator.md: docs/ai_investigator.md
+- usage_report.md: code/evaluation/usage_report.md
+- evaluation_report.md: code/evaluation/evaluation_report.md
+- aggregate_usage.py: code/evaluation/aggregate_usage.py
+
+## My request:
+Audit the existing AI agent implementation for the
+HackerRank Orchestrate competition.
+
+Inspect ai_auditor.py, providers.py, proposals.py,
+the four investigator tools, and the actual execution traces.
+
+Determine:
+1. Is this a genuine multi-step tool-using agent,
+   or only a one-shot LLM call with optional tools?
+2. Does the LLM autonomously select tools based on
+   observations and previous tool results?
+3. Can tool results change the agent's subsequent
+   investigation and final grounded proposals?
+4. Which concrete cases demonstrate useful agent behavior?
+5. Why have accepted AI proposals produced no incremental
+   improvement in sample accuracy?
+6. Are the agent traces sufficient to demonstrate
+   observation, reasoning, tool selection, and validation?
+7. What is the smallest safe improvement that would make
+   the agent's contribution measurable?
+
+Do not redesign the deterministic solver.
+Do not weaken evidence validation.
+Provide actual trace examples and a concise architecture
+diagram grounded in the implementation.
+
+
+Agent Response Summary:
+Audited the current text investigator loop, provider normalization, proposal grounding, four read-only tools and actual Gemini/DeepSeek run reports and usage journal. Confirmed genuine bounded multi-step text tool use, separate one-shot vision, result-dependent catalog-to-filename retrieval, duplicate accepted facts, missing grounding-rejection feedback, and the same-observation-ID vision novelty limitation. Verified a real compaction defect (case_17 reports total=13/truncated=false while showing 12 observations), tool-schema/runtime argument mismatch, and incomplete per-round application tracing. An offline replay changing only case_07 category to SUPPORT_ATTACHMENT passes unchanged validation but duplicates a fact already in the current deterministic baseline, so no incremental accuracy gain is claimed. Wrote docs/agent_implementation_audit.md with source/trace examples, a Mermaid architecture diagram and bounded improvement recommendations; solver/validators/dataset remain unchanged and no model calls were made.
+
+Actions:
+* Read ai_auditor.py, providers.py, proposals.py, investigator.py and solver handoff; inspected historical physical run reports and per-call journal.
+* Extracted case_07 trace and offline validation replay into ignored artifacts/agent_audit/ without mutating original traces.
+* Wrote docs/agent_implementation_audit.md; checked all 103 dataset hashes unchanged.
+* Appended this required conversation record; no source implementation changes, no paid calls and no test-suite rerun for this audit-only task.
+
+Context:
+tool=Codex Desktop
+model=gpt-6.1-sol
+branch=main
+repo_root=D:\Hackathon\hackerrank-orchestrate-october26
+worktree=D:\Hackathon\hackerrank-orchestrate-october26
+parent_agent=none
+
+
+## [2026-10-25T12:28:15+07:00] Deep analysis, Makefile creation, and command documentation
+
+User Prompt (verbatim, secrets redacted):
+coba analisa mendalam proyek ini kemudian ada banyak cpommand python kan coba buat ada makefile jadi ada make make bla bla dan terdokumentasikan di MD seluruh command-nya tiap ada perubahan command tambahan dll juga perlu diupdate dokumentasinya
+
+Agent Response Summary:
+Performed comprehensive architectural analysis of the Ghost Data Still Exists deletion-audit project, cataloging all Python CLI subcommands, diagnostic scripts, test suites, and packaging utilities. Created a cross-platform Makefile providing convenient targets for setup, testing, preprocessing, deterministic and AI solvers, evaluation, and end-to-end workflows. Documented all commands in COMMANDS.md with parameter details, default paths, and an explicit maintenance policy, and updated README.md and package_submission.py accordingly.
+
+Actions:
+* Analyzed repo architecture, entry points, dataset contracts, and test suite (222 tests passing).
+* Created Makefile with 26 PHONY targets spanning setup, testing, ingestion, OCR, solver, evaluation, diagnostics, packaging, and composite workflows.
+* Authored COMMANDS.md detailing all commands, parameter tables, execution flags, and mandatory documentation maintenance guidelines.
+* Updated README.md to reference Makefile and COMMANDS.md in Quick Start.
+* Updated code/package_submission.py to bundle Makefile and COMMANDS.md into artifacts/code.zip.
+
+Context:
+tool=Antigravity
+model=Gemini 3.8 Flash (High)
+branch=main
+repo_root=D:\Hackathon\hackerrank-orchestrate-october26
+worktree=D:\Hackathon\hackerrank-orchestrate-october26
+parent_agent=none
+
+
+## [2026-10-25T12:20:31+07:00] SESSION START
+
+tool=Antigravity
+model=Gemini 3.8 Flash (High)
+Repo Root: D:\Hackathon\hackerrank-orchestrate-october26
+Branch: main
+Worktree: D:\Hackathon\hackerrank-orchestrate-october26
+Parent Agent: none
+Language: py
+Time Remaining: not configured
+
+## [2026-10-25T05:27:31.698594+00:00] Audit actual AI tool use, grounding and trace sufficiency
+
+User Prompt (verbatim, secrets redacted):
+# Context from my IDE setup:
+
+## Active file: docs/submission_readiness.md
+
+## Open tabs:
+- submission_readiness.md: docs/submission_readiness.md
+- ai_investigator.md: docs/ai_investigator.md
+- usage_report.md: code/evaluation/usage_report.md
+- evaluation_report.md: code/evaluation/evaluation_report.md
+- aggregate_usage.py: code/evaluation/aggregate_usage.py
+
+## My request:
+Audit the existing AI agent implementation for the
+HackerRank Orchestrate competition.
+
+Inspect ai_auditor.py, providers.py, proposals.py,
+the four investigator tools, and the actual execution traces.
+
+Determine:
+1. Is this a genuine multi-step tool-using agent,
+   or only a one-shot LLM call with optional tools?
+2. Does the LLM autonomously select tools based on
+   observations and previous tool results?
+3. Can tool results change the agent's subsequent
+   investigation and final grounded proposals?
+4. Which concrete cases demonstrate useful agent behavior?
+5. Why have accepted AI proposals produced no incremental
+   improvement in sample accuracy?
+6. Are the agent traces sufficient to demonstrate
+   observation, reasoning, tool selection, and validation?
+7. What is the smallest safe improvement that would make
+   the agent's contribution measurable?
+
+Do not redesign the deterministic solver.
+Do not weaken evidence validation.
+Provide actual trace examples and a concise architecture
+diagram grounded in the implementation.
+
+
+Agent Response Summary:
+Audited the current text investigator loop, provider normalization, proposal grounding, four read-only tools and actual Gemini/DeepSeek run reports and usage journal. Confirmed genuine bounded multi-step text tool use, separate one-shot vision, result-dependent catalog-to-filename retrieval, duplicate accepted facts, missing grounding-rejection feedback, and the same-observation-ID vision novelty limitation. Verified a real compaction defect (case_17 reports total=13/truncated=false while showing 12 observations), tool-schema/runtime argument mismatch, and incomplete per-round application tracing. An offline replay changing only case_07 category to SUPPORT_ATTACHMENT passes unchanged validation but duplicates a fact already in the current deterministic baseline, so no incremental accuracy gain is claimed. Wrote docs/agent_implementation_audit.md with source/trace examples, a Mermaid architecture diagram and bounded improvement recommendations; solver/validators/dataset remain unchanged and no model calls were made.
+
+Actions:
+* Read ai_auditor.py, providers.py, proposals.py, investigator.py and solver handoff; inspected historical physical run reports and per-call journal.
+* Extracted case_07 trace and offline validation replay into ignored artifacts/agent_audit/ without mutating original traces.
+* Wrote docs/agent_implementation_audit.md; checked all 103 dataset hashes unchanged.
+* Appended this required conversation record; no source implementation changes, no paid calls and no test-suite rerun for this audit-only task.
+
+Context:
+tool=Codex Desktop
+model=gpt-6.1-sol
+branch=main
+repo_root=D:\Hackathon\hackerrank-orchestrate-october26
+worktree=D:\Hackathon\hackerrank-orchestrate-october26
+parent_agent=none
+
+
+## [2026-10-25T12:28:15+07:00] Deep analysis, Makefile creation, and command documentation
+
+User Prompt (verbatim, secrets redacted):
+coba analisa mendalam proyek ini kemudian ada banyak cpommand python kan coba buat ada makefile jadi ada make make bla bla dan terdokumentasikan di MD seluruh command-nya tiap ada perubahan command tambahan dll juga perlu diupdate dokumentasinya
+
+Agent Response Summary:
+Performed comprehensive architectural analysis of the Ghost Data Still Exists deletion-audit project, cataloging all Python CLI subcommands, diagnostic scripts, test suites, and packaging utilities. Created a cross-platform Makefile providing convenient targets for setup, testing, preprocessing, deterministic and AI solvers, evaluation, and end-to-end workflows. Documented all commands in COMMANDS.md with parameter details, default paths, and an explicit maintenance policy, and updated README.md and package_submission.py accordingly.
+
+Actions:
+* Analyzed repo architecture, entry points, dataset contracts, and test suite (222 tests passing).
+* Created Makefile with 26 PHONY targets spanning setup, testing, ingestion, OCR, solver, evaluation, diagnostics, packaging, and composite workflows.
+* Authored COMMANDS.md detailing all commands, parameter tables, execution flags, and mandatory documentation maintenance guidelines.
+* Updated README.md to reference Makefile and COMMANDS.md in Quick Start.
+* Updated code/package_submission.py to bundle Makefile and COMMANDS.md into artifacts/code.zip.
+
+Context:
+tool=Antigravity
+model=Gemini 3.8 Flash (High)
+branch=main
+repo_root=D:\Hackathon\hackerrank-orchestrate-october26
+worktree=D:\Hackathon\hackerrank-orchestrate-october26
+parent_agent=none
+
+
+## [2026-10-25T05:42:42.733008+00:00] Final forensic contract and conditional-retention review
+
+User Prompt (verbatim, secrets redacted):
+# Context from my IDE setup:
+
+## Active file: docs/agent_implementation_audit.md
+
+## Active selection of the file:
+# AI investigator implementation and trace audit
+
+Inspected the current ai_auditor.py, providers.py, proposals.py, investigator.py, solver
+handoff, historical application run reports and per-call usage journal. Audit only: no
+solver/provider/validator changes, no new model requests, no dataset modifications.
+
+## 1. Is it a genuine agent?
+
+**The text path is a bounded multi-step tool-using agent. The vision path is one-shot
+structured extraction.** Calling the entire implementation a one-shot wrapper is incorrect;
+calling every path autonomous iterative investigation would also be incorrect.
+
+ai_auditor.py:160-204 maintains a messages conversation. At each non-final turn the LLM
+receives the four tool schemas and selects function names/arguments. The runner validates
+and dispatches calls, appends the assistant call and tool responses, and calls the LLM again.
+The default is three model turns: at most two tool-request turns followed by a forced final
+JSON turn. Several calls can be chosen in one batch; those calls do not see each other's
+results until the next model turn. Provider retries are additional attempts, not agent turns.
+
+The model may return valid proposal JSON early. Case selection, provider routing, cache use,
+limits and the final stopping condition are deterministic. This is one agent with four tools,
+not a multi-agent system. Initial trace_identity() is preloaded by the host; some models
+redundantly call it again. vision() makes one generateContent request (or reuses its cache),
+with no tool loop. The model cannot autonomously request an image through the four tools.
+
+```mermaid
+flowchart LR
+    A[Request and deterministic baseline] --> B[Gate, route and cache]
+    B --> C[Text LLM turn]
+    C -->|selected calls| D[Four cutoff-bound read-only tools]
+    D -->|observations appended to history| C
+    C --> E[Structured proposal]
+    B --> V[One-shot vision or cached proposal]
+    V --> E
+    E --> F[Independent schema and source grounding]
+    F -->|new facts only| G[Per-case evidence clone and deterministic solver]
+    F -->|reject or existing fact| H[Diagnostics; baseline preserved]
+```
+
+There is currently **no grounding-rejection feedback edge from F to C**.
+
+## 2. Autonomy and tool scope
+
+The four methods in investigator.py are real read-only tools:
+- search_evidence: exact identifiers, resources, file IDs and literal asset filenames.
+- trace_identity: cutoff-filtered identifier versions and existing resource ownership.
+- inspect_timeline: admissible resource observations with direct_state annotations.
+- explain_policy: supplied policy rule, or the contract's data-flow treatment.
+
+The dispatcher is an explicit allowlist and results are deep copies. Each evidence query
+checks both capture availability and embedded observation time against the fixed case
+cutoff. There is no arbitrary shell, filesystem, network or effectful deletion tool.
+providers.py sends accumulated tool messages to DeepSeek and translates them into Gemini
+function responses, preserving Gemini's native assistant parts/thought signatures in memory.
+
+Tool selection is autonomous within these boundaries. The host does not script a fixed
+search -> timeline -> policy chain. It does constrain eligible cases: cases with no baseline
+issues or no already grounded resource candidate are skipped. Also, ground_fact requires
+preexisting unique ownership. Consequently this implementation cannot independently solve
+an entirely unlinked subject-resource relationship, despite having an identity lookup tool.
+
+## 3. Concrete live execution evidence
+
+### Gemini case_07: actual adaptive two-hop retrieval
+
+Source: artifacts/ai_iteration/gemini_fixed_sample.json, agent event beginning at line 20263.
+There are three successful model calls, no provider errors and no invalid-response repair:
+
+| Model turn | Observed action | Input/output tokens |
+| --- | --- | ---: |
+| 1 | search_evidence(kind=email, value=priya.raman@gmail.com) | 7573 / 108 |
+| 2 | search_evidence(kind=asset_reference, value=delivery_confirmation_19.pdf) | 9715 / 54 |
+| 3 | Structured LINK_ASSET proposal | 10744 / 393 |
+
+The first result contains activity_4007, whose details supply the exact filename and
+sole-owner association. That filename is absent from the stored baseline diagnostic.
+The next query retrieves evidence_46:image:ocr_context, containing the original object
+listing. The final proposal cites evidence_46 for presence and activity_4007 for ownership.
+These two one-tool turns are reconstructed from the implemented loop, two tool entries,
+three successful calls and absence of invalid-response entries; the original trace does
+not explicitly label round boundaries. This is evidence of result-dependent investigation,
+not a counterfactual experiment proving the model could never have guessed the filename.
+
+The proposal is rejected: category OBJECT_STORAGE_FILE is not SUPPORT_ATTACHMENT. The
+generic ASSET_REFERENCE_OR_SOLE_OWNERSHIP_UNPROVEN error obscures this precise cause.
+DeepSeek case_07 made the analogous category error OBJECT_STORAGE_LISTING.
+
+An **offline validator replay**, not a new model call, changed only category to
+SUPPORT_ATTACHMENT. All unchanged grounding checks then passed. The current deterministic
+baseline already contains the equivalent observation
+evidence_46:image:ocr_context:catalog:activity_4007. Thus fixing this old model formatting
+error now would not prove incremental solver improvement. Replay details are preserved in
+artifacts/agent_audit/validator_replay.json; trace extract in case07_trace_extract.json.
+
+### DeepSeek case_07: tool-argument error recovery and budget exhaustion
+
+Source: artifacts/ai_iteration/deepseek_sample.json, event line 20491. Resource searches
+without system_id return 'Resource searches require system_id'. A subsequent search adds
+system_id=object_storage, and an asset-reference search finds the listing. Later timeline
+requests return TOOL_BUDGET_EXHAUSTED. The original pilot also requested explain_policy for
+SUPPORT_ATTACHMENT, but that call was denied at the tool budget. Useful behavior includes
+recovering from a tool error and finding a catalog/listing link; no fact was ultimately applied.
+
+### case_17: real observation retrieval, but accepted facts already existed
+
+DeepSeek event: deepseek_sample.json line 21139. Three model calls; accepted observations
+evidence_01:line:21, evidence_67:line:3 and evidence_01:line:53 all have new_fact=false.
+The tombstone activity-as-state proposal and an audit-record timestamp are rejected.
+Gemini event: gemini_fixed_sample.json line 20575. It accepts evidence_01:line:21 with
+new_fact=false; rejects a backup timestamp; repairs a fenced-JSON intermediate response
+before returning schema-valid final JSON. Format repair is feedback, grounding repair is not.
+
+### case_06 and case_63: useful limits, not solved-by-AI examples
+
+Gemini case_06 rediscovers search_001 in evidence_57 and accepts an existing observation;
+the comparison report uses a cache hit, so it is not a new live invocation in that run.
+DeepSeek case_06 uses identity, search, timelines and explain_policy(SEARCH_INDEX_ENTRY),
+but finishes with INVALID_FINAL_JSON.
+
+The live vision case_63 event in vision_fixed_full.json at line 216279 uses one call:
+3076 input / 329 output tokens. It extracts sj.park@naver.com from evidence_60, but the
+request is for the catalog-linked user_09. Validation returns
+VISIBLE_IDENTIFIER_NOT_EXACTLY_CORROBORATED. That demonstrates extraction and a working
+validation boundary, not autonomous multi-step vision or a resolved identity conflict.
+
+## 4. Why there is no incremental sample accuracy gain
+
+1. REUSE_DIRECT returns the original observation. The investigator records acceptance but
+   excludes its existing observation_id from additions. Solver reruns only if the returned
+   accepted-new-observation list is nonempty (solver.py:260-269).
+2. LINK_ASSET is the only current text interpretation capable of creating new observations.
+   Actual attempts failed category/quote/source checks. Those failures are not fed back to
+   the model after schema-valid JSON has ended the loop.
+3. Vision requires existing category/state and exact identifier corroboration; it cannot
+   assert a new unsupported state. Its successful branch returns replace(source, scope=...)
+   **with the same observation_id**, so ai_auditor.py:262 filters even a valid scope-only
+   corroboration from additions. It currently has no effective novelty path into the solver.
+4. The eligibility gate omits cases without resource candidates and cases marked sufficient.
+   It therefore does not investigate every sample exact-match failure. Tools expose parsed
+   observations, not arbitrary source exploration or an unrestricted identity-link mechanism.
+5. Some gaps are real missing ownership/cutoff/hidden-field problems. More fluent summaries
+   cannot supply admissible facts. Final summaries/hypotheses are not themselves validated
+   evidence and can overstate what the accepted fact set establishes.
+6. The later deterministic artifact adapter now covers the strongest historical agent lead.
+   Its full-coverage improvement belongs to that deterministic change, not the earlier rejected
+   model proposal. Its public-sample precision tradeoff also must not be called an AI gain.
+
+No inspected run demonstrates newly accepted AI evidence producing a sample accuracy lift.
+Useful search, error recovery, uncertainty reporting and safe rejection are weaker, distinct
+claims. A different observation_id alone is also insufficient novelty: measure equivalent
+resource/source/state facts against the baseline, not just string IDs.
+
+## 5. Trace sufficiency and concrete defects
+
+Sufficient for a basic tool-use demonstration: ordered tool names, arguments, compacted
+results, final facts/hypotheses/reasoning summaries, accepted/rejected proposals and reasons,
+provider/model, token/cost/latency records, cache-vs-live distinctions and original source IDs.
+
+Not sufficient for a fully reproducible per-turn causal audit: tool_trace is flattened;
+round IDs, provider call IDs, assistant tool batches, exact supplied prompt/context hashes,
+per-turn timestamps and short tool-choice rationales are absent. Ordinary assistant messages
+and Gemini thought signatures are not persisted in these application reports. Usage journals
+record reservations/completions, not conversation contents. The older interrupted pilot has
+missing usage, and one initial malformed DeepSeek final lacks raw text. Native coding-session
+transcripts do not replace these application-level records. Hidden chain-of-thought is neither
+required nor recommended; brief decision summaries and source IDs suffice.
+
+**Verified context-truncation bug:** compact() silently trims every list to 12 items and
+every string to 2000 characters. In DeepSeek case_17, search_evidence returns total=13 and
+truncated=false, but the recorded/model-visible observations array has only 12 entries.
+The tools sort oldest-first; silent compaction can hide a later readback while reporting a
+complete result. This is a context-coverage defect, not demonstrated causal accuracy loss.
+
+The resource-search schema also makes system_id optional even though runtime requires it
+for kind=resource. Actual invalid calls consume the limited budget. Category is a free string
+in the proposal schema despite grounding requiring exact supplied policy categories.
+
+## 6. Smallest safe improvement and honest success criteria
+
+First repair truthful bounded tool-result presentation: preserve the actual shown count,
+mark truncation whenever compaction removes observations, and let the model retrieve a
+specific resource/readback rather than silently losing it. Log round/tool-call IDs and a
+brief next-action summary. These changes affect the agent context/trace, not solver policy
+or evidence validation. The existing case_17 trace provides a reproducible regression input.
+
+The smallest proposal-quality improvement is to constrain category to the supplied policy
+vocabulary and explicitly require SUPPORT_ATTACHMENT for LINK_ASSET. Preserve all grounding
+checks. If a schema-valid proposal arrives with turns still available, return precise
+grounding errors for one correction **within the existing turn/cost limits**. Do not add
+unbounded reflection or accept an interpretation merely because the model repeats it.
+
+Measure in paired baseline/agent runs: tool-result coverage, invalid-call rate, corrected
+proposal rate, unique new source-grounded facts, resolved gaps and actual prediction/metric
+delta. The existing case_07 replay proves a recoverable categorical error, but it is already
+covered by today's deterministic solver; it cannot serve as a new accuracy win. Do not
+disable working deterministic extraction to manufacture an agent contribution.
+
+There is **no demonstrated one-line change guaranteeing higher accuracy on the current
+32 samples**. A genuine accuracy claim requires an admissible fact not already in the
+baseline, successful unchanged validation and a measured output improvement. If a bounded
+pilot still finds only duplicates or unavailable evidence, report zero incremental gain.
+
+## Open tabs:
+- agent_implementation_audit.md: docs/agent_implementation_audit.md
+- COMMANDS.md: COMMANDS.md
+- submission_readiness.md: docs/submission_readiness.md
+- submission_debugging.md: docs/submission_debugging.md
+- ai_investigator.md: docs/ai_investigator.md
+
+## My request:
+Continue the Ghost Data Still Exists project. This is the final forensic correctness and submission-readiness iteration.
+
+CURRENT STATE:
+- 510/518 contract-valid full rows.
+- 8 unresolved: case_46, case_55, case_63, case_506, case_512, case_524, case_530, case_532.
+- case_34 has one incomplete plan related to a missing retained record.
+- Sample status accuracy 90.625%, exact-case accuracy 28.125%, step F1 89.326%.
+- 222 tests pass, fresh-package reproducibility verified.
+- Gemini and DeepSeek agent adapters work, but no measured incremental accuracy improvement.
+
+FIRST: Re-read the exact official status definitions, evidence requirements, allowed operations, policy rules, and verification semantics. In particular, determine whether lack of proof of COMPLETE legitimately implies INCOMPLETE, and whether a missing retained record creates an actionable obligation. Cite exact source passages in the internal report.
+
+TASK 1 — EIGHT CASE FORENSIC MATRIX:
+For each unresolved case, provide:
+- Exact audit_at and relevant subject identity
+- Applicable policy obligations
+- All candidate admissible evidence IDs and their observations
+- Relevant rejected evidence with rejection reasons
+- Whether the blocker is missing data, incorrect join, temporal filtering, contradictory identity, or overly restrictive sufficiency logic
+- Smallest generalizable evidence-grounded fix
+- Whether final status can be established under the official contract
+
+Specifically inspect tombstone redaction evidence, archive restore permissions, conflicting screenshot/catalog identity, retained-record/account links, and partial service exports.
+
+TASK 2 — CASE_34 POLICY CONSISTENCY:
+Determine whether the reported missing retained record is a genuine required obligation at audit_at. Do not invent a restoration operation. Correct any overbroad policy or planner assumption if justified.
+
+TASK 3 — SAMPLE STEP ACCURACY:
+Analyze the 23 non-exact sample cases by missing, extra, wrong-field and wrong-citation steps.
+Investigate the three new object-storage steps absent from reference output. Decide their correctness from official policy and grounded evidence, not from sample-score optimization.
+Implement only generalizable and proven fixes.
+
+TASK 4 — AGENT CONTRIBUTION:
+Inspect existing actual Gemini/DeepSeek traces for cases relevant to the unresolved problems.
+If a narrow agent investigation might reveal admissible evidence, use the existing bounded tools and validated proposals.
+Do not add another framework, increase budgets without justification, or hallucinate missing observations.
+
+TASK 5 — SUBMISSION:
+Run tests, sample evaluation, all 518 predictions, strict validation, clean-environment packaging, SHA256 integrity checks, and archive verification.
+Produce exact before/after metrics and publish output.csv only if contract-valid.
+If not achievable, preserve the best candidate predictions and present exact unresolved blockers plus available official clarification routes.
+
+IMPORTANT:
+- No sample answer hardcoding.
+- No fabricated evidence, ownership, state, or operation.
+- No post-cutoff facts treated as current evidence.
+- No speculative fallbacks just to force 518/518.
+- Prefer correctness and verifiable improvements to more tests.
+
+DELIVERABLE:
+Concise per-case forensic findings, actual changes, before/after metrics, current contract validity, remaining blockers, agent contribution, and exact submission commands.
+
+
+Agent Response Summary:
+Re-read and quoted the exact completeness, evidence/citation, cutoff and allowed-operation contract; lack of COMPLETE proof does not supply a supported INCOMPLETE finding. Rebuilt the nine-case forensic matrix including anonymous/other-subject rows from relevant partial files and manually inspected the original tombstone, backup and marketing screenshots; no additional admissible proof resolved the eight cases. Corrected the general absent-record retention logic: case_34 has no supplied resource-specific retention period, so the former REQUIRED_RETAINED_RECORD_MISSING assertion is now RETENTION_CONDITION_UNPROVEN; no restoration or unsupported verification was invented. All 224 tests passed, including a fresh dependency environment; fresh-package OCR regenerated all 11 images and sample/full CSVs are byte-identical both to the working outputs and iteration baseline, with unchanged 510/518 validity, eight unresolved and one decided conditional-plan gap. All 103 dataset hashes and safe archive checks passed, zero new model calls/tokens/cost were incurred, no output.csv was published, and the detailed report preserves exact blockers and clarification questions while disclosing that live event pages could not be accessed.
+
+Actions:
+* Preserved before artifacts under artifacts/final_forensic/before and regenerated sample/full predictions, strict evaluation/validation, mismatch diagnostics, ingestion inventory and evaluator self-test.
+* Updated policy.py and sufficiency.py conditional-retention guards; added two independent retention/hold tests, preserving the prior 222 tests.
+* Extended debug_submission.py with optional relevant-file context and explicit rejection of anonymous/other-subject joins; wrote artifacts/final_forensic/evidence_matrix.json.
+* Wrote docs/final_forensic_review.md with exact contract quotations, all eight source matrices, case_34 consistency correction, sample step decision and official clarification questions.
+* Refreshed evaluation/usage/readiness reports, preserved historical debugging interpretation with a superseding notice, and built artifacts/code.zip.
+* Installed dependencies in a new virtual environment, extracted the source package, regenerated all 11 OCR files, ran all 224 tests there, and verified byte-identical sample/full outputs, all 103 hashes, archive CRC, mandatory report paths, excluded data and configured-credential absence.
+* Attempted read-only access to the repository-prescribed and usual-www contest pages; neither was accessible through the tool. No organizer message was sent or clarification invented. Active native trace preserved.
+
+Context:
+tool=Codex Desktop
+model=gpt-6.1-sol
+branch=main
+repo_root=D:\Hackathon\hackerrank-orchestrate-october26
+worktree=D:\Hackathon\hackerrank-orchestrate-october26
+parent_agent=none
+
+## [2026-10-25T06:10:04.503843+00:00] Agent boundary corrections, live pilot and checked source archive
+
+User Prompt (verbatim, secrets redacted):
+# Context from my IDE setup:
+
+## Active file: docs/agent_implementation_audit.md
+
+## Active selection of the file:
+# AI investigator implementation and trace audit
+
+Inspected the current ai_auditor.py, providers.py, proposals.py, investigator.py, solver
+handoff, historical application run reports and per-call usage journal. Audit only: no
+solver/provider/validator changes, no new model requests, no dataset modifications.
+
+## 1. Is it a genuine agent?
+
+**The text path is a bounded multi-step tool-using agent. The vision path is one-shot
+structured extraction.** Calling the entire implementation a one-shot wrapper is incorrect;
+calling every path autonomous iterative investigation would also be incorrect.
+
+ai_auditor.py:160-204 maintains a messages conversation. At each non-final turn the LLM
+receives the four tool schemas and selects function names/arguments. The runner validates
+and dispatches calls, appends the assistant call and tool responses, and calls the LLM again.
+The default is three model turns: at most two tool-request turns followed by a forced final
+JSON turn. Several calls can be chosen in one batch; those calls do not see each other's
+results until the next model turn. Provider retries are additional attempts, not agent turns.
+
+The model may return valid proposal JSON early. Case selection, provider routing, cache use,
+limits and the final stopping condition are deterministic. This is one agent with four tools,
+not a multi-agent system. Initial trace_identity() is preloaded by the host; some models
+redundantly call it again. vision() makes one generateContent request (or reuses its cache),
+with no tool loop. The model cannot autonomously request an image through the four tools.
+
+```mermaid
+flowchart LR
+    A[Request and deterministic baseline] --> B[Gate, route and cache]
+    B --> C[Text LLM turn]
+    C -->|selected calls| D[Four cutoff-bound read-only tools]
+    D -->|observations appended to history| C
+    C --> E[Structured proposal]
+    B --> V[One-shot vision or cached proposal]
+    V --> E
+    E --> F[Independent schema and source grounding]
+    F -->|new facts only| G[Per-case evidence clone and deterministic solver]
+    F -->|reject or existing fact| H[Diagnostics; baseline preserved]
+```
+
+There is currently **no grounding-rejection feedback edge from F to C**.
+
+## 2. Autonomy and tool scope
+
+The four methods in investigator.py are real read-only tools:
+- search_evidence: exact identifiers, resources, file IDs and literal asset filenames.
+- trace_identity: cutoff-filtered identifier versions and existing resource ownership.
+- inspect_timeline: admissible resource observations with direct_state annotations.
+- explain_policy: supplied policy rule, or the contract's data-flow treatment.
+
+The dispatcher is an explicit allowlist and results are deep copies. Each evidence query
+checks both capture availability and embedded observation time against the fixed case
+cutoff. There is no arbitrary shell, filesystem, network or effectful deletion tool.
+providers.py sends accumulated tool messages to DeepSeek and translates them into Gemini
+function responses, preserving Gemini's native assistant parts/thought signatures in memory.
+
+Tool selection is autonomous within these boundaries. The host does not script a fixed
+search -> timeline -> policy chain. It does constrain eligible cases: cases with no baseline
+issues or no already grounded resource candidate are skipped. Also, ground_fact requires
+preexisting unique ownership. Consequently this implementation cannot independently solve
+an entirely unlinked subject-resource relationship, despite having an identity lookup tool.
+
+## 3. Concrete live execution evidence
+
+### Gemini case_07: actual adaptive two-hop retrieval
+
+Source: artifacts/ai_iteration/gemini_fixed_sample.json, agent event beginning at line 20263.
+There are three successful model calls, no provider errors and no invalid-response repair:
+
+| Model turn | Observed action | Input/output tokens |
+| --- | --- | ---: |
+| 1 | search_evidence(kind=email, value=priya.raman@gmail.com) | 7573 / 108 |
+| 2 | search_evidence(kind=asset_reference, value=delivery_confirmation_19.pdf) | 9715 / 54 |
+| 3 | Structured LINK_ASSET proposal | 10744 / 393 |
+
+The first result contains activity_4007, whose details supply the exact filename and
+sole-owner association. That filename is absent from the stored baseline diagnostic.
+The next query retrieves evidence_46:image:ocr_context, containing the original object
+listing. The final proposal cites evidence_46 for presence and activity_4007 for ownership.
+These two one-tool turns are reconstructed from the implemented loop, two tool entries,
+three successful calls and absence of invalid-response entries; the original trace does
+not explicitly label round boundaries. This is evidence of result-dependent investigation,
+not a counterfactual experiment proving the model could never have guessed the filename.
+
+The proposal is rejected: category OBJECT_STORAGE_FILE is not SUPPORT_ATTACHMENT. The
+generic ASSET_REFERENCE_OR_SOLE_OWNERSHIP_UNPROVEN error obscures this precise cause.
+DeepSeek case_07 made the analogous category error OBJECT_STORAGE_LISTING.
+
+An **offline validator replay**, not a new model call, changed only category to
+SUPPORT_ATTACHMENT. All unchanged grounding checks then passed. The current deterministic
+baseline already contains the equivalent observation
+evidence_46:image:ocr_context:catalog:activity_4007. Thus fixing this old model formatting
+error now would not prove incremental solver improvement. Replay details are preserved in
+artifacts/agent_audit/validator_replay.json; trace extract in case07_trace_extract.json.
+
+### DeepSeek case_07: tool-argument error recovery and budget exhaustion
+
+Source: artifacts/ai_iteration/deepseek_sample.json, event line 20491. Resource searches
+without system_id return 'Resource searches require system_id'. A subsequent search adds
+system_id=object_storage, and an asset-reference search finds the listing. Later timeline
+requests return TOOL_BUDGET_EXHAUSTED. The original pilot also requested explain_policy for
+SUPPORT_ATTACHMENT, but that call was denied at the tool budget. Useful behavior includes
+recovering from a tool error and finding a catalog/listing link; no fact was ultimately applied.
+
+### case_17: real observation retrieval, but accepted facts already existed
+
+DeepSeek event: deepseek_sample.json line 21139. Three model calls; accepted observations
+evidence_01:line:21, evidence_67:line:3 and evidence_01:line:53 all have new_fact=false.
+The tombstone activity-as-state proposal and an audit-record timestamp are rejected.
+Gemini event: gemini_fixed_sample.json line 20575. It accepts evidence_01:line:21 with
+new_fact=false; rejects a backup timestamp; repairs a fenced-JSON intermediate response
+before returning schema-valid final JSON. Format repair is feedback, grounding repair is not.
+
+### case_06 and case_63: useful limits, not solved-by-AI examples
+
+Gemini case_06 rediscovers search_001 in evidence_57 and accepts an existing observation;
+the comparison report uses a cache hit, so it is not a new live invocation in that run.
+DeepSeek case_06 uses identity, search, timelines and explain_policy(SEARCH_INDEX_ENTRY),
+but finishes with INVALID_FINAL_JSON.
+
+The live vision case_63 event in vision_fixed_full.json at line 216279 uses one call:
+3076 input / 329 output tokens. It extracts sj.park@naver.com from evidence_60, but the
+request is for the catalog-linked user_09. Validation returns
+VISIBLE_IDENTIFIER_NOT_EXACTLY_CORROBORATED. That demonstrates extraction and a working
+validation boundary, not autonomous multi-step vision or a resolved identity conflict.
+
+## 4. Why there is no incremental sample accuracy gain
+
+1. REUSE_DIRECT returns the original observation. The investigator records acceptance but
+   excludes its existing observation_id from additions. Solver reruns only if the returned
+   accepted-new-observation list is nonempty (solver.py:260-269).
+2. LINK_ASSET is the only current text interpretation capable of creating new observations.
+   Actual attempts failed category/quote/source checks. Those failures are not fed back to
+   the model after schema-valid JSON has ended the loop.
+3. Vision requires existing category/state and exact identifier corroboration; it cannot
+   assert a new unsupported state. Its successful branch returns replace(source, scope=...)
+   **with the same observation_id**, so ai_auditor.py:262 filters even a valid scope-only
+   corroboration from additions. It currently has no effective novelty path into the solver.
+4. The eligibility gate omits cases without resource candidates and cases marked sufficient.
+   It therefore does not investigate every sample exact-match failure. Tools expose parsed
+   observations, not arbitrary source exploration or an unrestricted identity-link mechanism.
+5. Some gaps are real missing ownership/cutoff/hidden-field problems. More fluent summaries
+   cannot supply admissible facts. Final summaries/hypotheses are not themselves validated
+   evidence and can overstate what the accepted fact set establishes.
+6. The later deterministic artifact adapter now covers the strongest historical agent lead.
+   Its full-coverage improvement belongs to that deterministic change, not the earlier rejected
+   model proposal. Its public-sample precision tradeoff also must not be called an AI gain.
+
+No inspected run demonstrates newly accepted AI evidence producing a sample accuracy lift.
+Useful search, error recovery, uncertainty reporting and safe rejection are weaker, distinct
+claims. A different observation_id alone is also insufficient novelty: measure equivalent
+resource/source/state facts against the baseline, not just string IDs.
+
+## 5. Trace sufficiency and concrete defects
+
+Sufficient for a basic tool-use demonstration: ordered tool names, arguments, compacted
+results, final facts/hypotheses/reasoning summaries, accepted/rejected proposals and reasons,
+provider/model, token/cost/latency records, cache-vs-live distinctions and original source IDs.
+
+Not sufficient for a fully reproducible per-turn causal audit: tool_trace is flattened;
+round IDs, provider call IDs, assistant tool batches, exact supplied prompt/context hashes,
+per-turn timestamps and short tool-choice rationales are absent. Ordinary assistant messages
+and Gemini thought signatures are not persisted in these application reports. Usage journals
+record reservations/completions, not conversation contents. The older interrupted pilot has
+missing usage, and one initial malformed DeepSeek final lacks raw text. Native coding-session
+transcripts do not replace these application-level records. Hidden chain-of-thought is neither
+required nor recommended; brief decision summaries and source IDs suffice.
+
+**Verified context-truncation bug:** compact() silently trims every list to 12 items and
+every string to 2000 characters. In DeepSeek case_17, search_evidence returns total=13 and
+truncated=false, but the recorded/model-visible observations array has only 12 entries.
+The tools sort oldest-first; silent compaction can hide a later readback while reporting a
+complete result. This is a context-coverage defect, not demonstrated causal accuracy loss.
+
+The resource-search schema also makes system_id optional even though runtime requires it
+for kind=resource. Actual invalid calls consume the limited budget. Category is a free string
+in the proposal schema despite grounding requiring exact supplied policy categories.
+
+## 6. Smallest safe improvement and honest success criteria
+
+First repair truthful bounded tool-result presentation: preserve the actual shown count,
+mark truncation whenever compaction removes observations, and let the model retrieve a
+specific resource/readback rather than silently losing it. Log round/tool-call IDs and a
+brief next-action summary. These changes affect the agent context/trace, not solver policy
+or evidence validation. The existing case_17 trace provides a reproducible regression input.
+
+The smallest proposal-quality improvement is to constrain category to the supplied policy
+vocabulary and explicitly require SUPPORT_ATTACHMENT for LINK_ASSET. Preserve all grounding
+checks. If a schema-valid proposal arrives with turns still available, return precise
+grounding errors for one correction **within the existing turn/cost limits**. Do not add
+unbounded reflection or accept an interpretation merely because the model repeats it.
+
+Measure in paired baseline/agent runs: tool-result coverage, invalid-call rate, corrected
+proposal rate, unique new source-grounded facts, resolved gaps and actual prediction/metric
+delta. The existing case_07 replay proves a recoverable categorical error, but it is already
+covered by today's deterministic solver; it cannot serve as a new accuracy win. Do not
+disable working deterministic extraction to manufacture an agent contribution.
+
+There is **no demonstrated one-line change guaranteeing higher accuracy on the current
+32 samples**. A genuine accuracy claim requires an admissible fact not already in the
+baseline, successful unchanged validation and a measured output improvement. If a bounded
+pilot still finds only duplicates or unavailable evidence, report zero incremental gain.
+
+## Open tabs:
+- agent_implementation_audit.md: docs/agent_implementation_audit.md
+- COMMANDS.md: COMMANDS.md
+- submission_readiness.md: docs/submission_readiness.md
+- submission_debugging.md: docs/submission_debugging.md
+- ai_investigator.md: docs/ai_investigator.md
+
+## My request:
+Continue Ghost Data Still Exists. Read docs/agent_implementation_audit.md and inspect the actual implementation and traces.
+
+GOAL: Fix the smallest verified agent defects, measure actual incremental value, and preserve submission readiness. Do not redesign the solver or introduce multi-agent frameworks.
+
+1. Fix silent tool-result truncation. If compact() removes observations, report accurate total_count, shown_count, truncated status and retrieval cursor. Prevent newer admissible readbacks and contradictions from silently disappearing. Add a regression based on case_17.
+2. Fix tool schema/runtime disagreement: kind=resource requires system_id. Prevent invalid calls from consuming budget where possible.
+3. Constrain proposal categories to exact policy vocabulary. In particular, LINK_ASSET must use a contract-valid category such as SUPPORT_ATTACHMENT when supported.
+4. Return precise grounding errors to the LLM for at most one correction, within the existing model turn/tool/token budgets. Never weaken grounding checks.
+5. Investigate the vision scope-enrichment defect. Allow validated changes to existing observation metadata to reach the solver without inventing a new observation_id. Preserve provenance, original source, immutable evidence and cutoff checks.
+6. Improve traceability: round ID, call ID, tool call batch, shown/total counts, truncated flag, context hash, concise decision summary and validation result. Do not log hidden chain-of-thought or API secrets.
+7. Run a bounded pilot on representative cases, including case_07, case_17 and case_63, and selected unresolved cases when tools have admissible evidence.
+8. Measure actual unique newly grounded facts, accepted enrichments, prediction changes, status accuracy, exact-case accuracy, step F1, contract validity, additional tokens and estimated costs.
+9. Compare against the current deterministic baseline. Do not claim agent accuracy gain if the outputs are identical.
+10. Preserve all 103 dataset files, regression tests, CLI compatibility and packaging.
+11. After testing, revisit the eight unresolved verdicts and the case_34 policy inconsistency. Implement only admissible, generalizable fixes.
+12. Produce a final readiness report and regenerate the checked source archive.
+
+SUCCESS CRITERIA:
+- No silent truncation.
+- No unnecessary invalid tool calls caused by misleading schemas.
+- Grounding corrections work while all evidence validation remains strict.
+- Any accepted enrichment genuinely reaches the solver.
+- Actual before/after metrics are measured.
+- No hardcoded sample answers or fabricated evidence.
+- Clear account of whether all 518 output rows are contract-valid.
+
+IMPORTANT: If the bounded agent pilot does not improve results, stop paid AI experimentation and prioritize the remaining submission blockers and final packaging.
+
+
+Agent Response Summary:
+Implemented explicit newest-first evidence pagination, truthful context presentation, conditional resource schemas, exact policy categories, one bounded grounding correction, semantic novelty checks and same-ID immutable metadata delivery to a case-local solver store. Seven successful live DeepSeek/Gemini calls used 76950 input and 3056 output tokens, estimated USD 0.02904615, and found four duplicate proposals but no new facts, accepted enrichments or changed predictions; paid experimentation then stopped. Revisited the eight unresolved verdicts and case_34 without fabricating absent state or policy evidence; full validity remains 510/518 and sample status/exact/F1 remain 90.625/28.125/89.325843 percent. All 232 tests passed in both working and fresh dependency environments; regenerated OCR reproduces identical split CSVs and all 103 dataset hashes remain unchanged. Refreshed measured reports and verified the 67-file source ZIP with no dataset, caches or credentials; root output.csv remains unpublished and native trace export waits for session shutdown.
+
+Actions:
+* Edited code/deletion_audit/ai_auditor.py, investigator.py, proposals.py, providers.py and solver.py.
+* Added tests/test_agent_corrections.py and updated the existing vision-delivery assertion in tests/test_ai_foundation.py.
+* Updated docs/agent_corrections_readiness.md, historical audit labeling, readiness/AI docs, both evaluation reports, README.md, COMMANDS.md and Makefile help.
+* Ran pytest (232 passed), evaluator self-test, deterministic sample/full runs, strict evaluation/validation and one bounded seven-call live pilot.
+* Regenerated the nine-case forensic matrix, fresh environment/native OCR/split runs, SHA-256 integrity check and checked artifacts/code.zip; machine results are under artifacts/agent_fixes/.
+
+Context:
+tool=Codex Desktop
+model=gpt-6.1-sol
+branch=main
+repo_root=D:\Hackathon\hackerrank-orchestrate-october26
+worktree=D:\Hackathon\hackerrank-orchestrate-october26
+parent_agent=none
+
+## [2026-10-25T07:03:01.451234+00:00] Separate candidate preflight and final recovery checklist
+
+User Prompt (verbatim, secrets redacted):
+Continue Ghost Data Still Exists. We are in final submission-recovery mode.
+
+Current state:
+- 510/518 strict evidence-grounded contract-valid outputs.
+- Eight genuinely unresolved verdicts: case_46, case_55, case_63, case_506, case_512, case_524, case_530, case_532.
+- 224 tests passing.
+- Sample status accuracy 90.625%, exact-case accuracy 28.125%.
+- Official output schema permits COMPLETE, INCOMPLETE, NOT_APPLICABLE only.
+- Submission requires exactly 518 rows.
+- The forensic review found no further admissible evidence resolving these eight cases.
+
+OBJECTIVES:
+
+1. Preserve the current evidence-strict solver, reports, and its refusal to make unsupported claims. Do not weaken strict mode.
+
+2. Implement an explicitly separate, opt-in SUBMISSION CANDIDATE workflow if feasible:
+- Produce a full 518-row candidate using the best defensible interpretation of available evidence and the official contract.
+- Clearly distinguish evidence-grounded decisions from lower-confidence forced-format judgments.
+- Never fabricate evidence IDs, resource ownership, states, remediation operations, or verification proof.
+- Never use NOT_APPLICABLE for genuine deletion requests just to avoid uncertainty.
+- Never equate absence of proof of COMPLETE with demonstrated INCOMPLETE without documenting the assumption and contract risk.
+- Keep all uncertainty and assumptions in a separate machine-readable diagnostics report.
+- Validate exact syntax and schema independently from evidence-grounding correctness.
+- If a 518-row candidate cannot be generated without unsupported claims, explain the precise limitation rather than falsely certifying it as fully correct.
+
+3. Prepare a concise organizer clarification question about missing evidence, contradictory screenshot identity, and a mandatory three-status output contract with no UNKNOWN.
+
+4. Analyze the remaining sample exact-case mismatches and implement only verified, policy-general improvements, especially missing verification obligations and evidence-field mismatches.
+
+5. Verify full source archive, README, clean-environment execution, usage report, evaluation report, agent traces, chat transcript and secret exclusions.
+
+6. Recheck the exact official submission requirements and deadline from available official event instructions. Do not invent a deadline.
+
+7. Produce a final submission checklist and the exact local filenames to upload. Keep the strict diagnostic outputs and the submission candidate distinct.
+
+FINAL REPORT:
+- Strict evidence-grounded validity.
+- Candidate CSV schema validity.
+- Exact counts of low-confidence cases and their assumptions.
+- Measured sample accuracy, step F1, field accuracy and exact-match accuracy.
+- Whether output.csv was generated, and whether it is only schema-valid or also evidence-validated.
+- Required archive/transcript/report readiness.
+- Actual remaining risks and next submission actions.
+
+Do not redesign the agent, expand model budgets, or repeat investigations already proven inconclusive. Prioritize getting a truthful, reproducible submission candidate ready.
+
+Agent Response Summary:
+Implemented an explicitly opt-in submission candidate preflight that recomputes the strict full run, independently reports syntax/contract and sufficiency checks, and never substitutes a forced status or invented step. It produced 518 diagnostic rows but withheld candidate CSV and root output.csv because eight verdicts and one conditional plan gap remain; zero lower-confidence judgments were published. Re-evaluated all sample mismatches with unchanged status/exact/F1/field metrics of 90.625/28.125/89.325843/77.447426 percent and no verified generalizable planner correction. All 235 tests pass in working and extracted source checkouts, strict predictions reproduce identically, all 103 original dataset hashes match, and the regenerated 71-file archive passes source/CRC/report/credential exclusion checks. Drafted but did not send an organizer question, verified the official start and advertised 24-hour schedule while leaving the authenticated closing timestamp unconfirmed, and documented exact upload names plus the pending post-shutdown native trace export.
+
+Actions:
+* Added code/deletion_audit/submission_candidate.py, code/prepare_submission.py and three tests in tests/test_submission_candidate.py; strict solver/validator unchanged.
+* Added Makefile prepare-candidate target and updated help, README.md, COMMANDS.md, required evaluation/usage reports and docs/submission_recovery.md.
+* Ran all 235 tests, full candidate preflight via Python and make, sample evaluator/mismatch diagnosis, full strict validation and extracted-source reproduction.
+* Rebuilt artifacts/code.zip, wrote artifacts/submission_recovery/candidate_report.json, organizer_question.txt and verification.json; candidate and output.csv remain absent.
+* Read official event page, participant statement, trace instructions and public issue 19; no new model calls and no external messages.
+
+Context:
+tool=Codex Desktop
+model=gpt-6.1-sol
+branch=main
+repo_root=D:\Hackathon\hackerrank-orchestrate-october26
+worktree=D:\Hackathon\hackerrank-orchestrate-october26
+parent_agent=none
+
+## [2026-10-25T07:32:19.609685+00:00] Further source-grounded agent improvement analysis
+
+User Prompt (verbatim, secrets redacted):
+Analisa apalagi yang biea dilakukan dan dikmplementasi dari segi agent-nya
+Gak bisa nanya panitia sih
+
+Agent Response Summary:
+Inspected current investigator selection, exact-query tools, grounding validation, vision handoff and measured pilot results without running models or changing prediction code. Confirmed that missing ownership is rejected before proposed interpretation, vision metadata has no state-engine consumer, and two retrieval turns leave no grounding correction within the default three-turn budget. Recommended source-addressed extraction, independently validated relationship proposals, goal-directed evidence retrieval and draft validation within unchanged limits, with proof-delta and accuracy measurements separating engineering improvements from real solver gains. Organizer clarification is no longer treated as the next required action; these self-contained improvements remain possible, while absent source facts cannot be promised to resolve the eight cases.
+
+Actions:
+* Read code/deletion_audit/ai_auditor.py, proposals.py, investigator.py, state.py and the existing pilot summary.
+* Verified vision_corroborated/vision_image_sha256 usage across source; no policy/state consumer currently uses those flags.
+* Analyzed further agent changes and safety/measurement criteria; only the required append-only log was changed.
+* No model calls, paid experiments, dataset changes or submission archive changes.
+
+Context:
+tool=Codex Desktop
+model=gpt-6.1-sol
+branch=main
+repo_root=D:\Hackathon\hackerrank-orchestrate-october26
+worktree=D:\Hackathon\hackerrank-orchestrate-october26
+parent_agent=none
+
+## [2026-10-25T08:34:32.388097+00:00] Implement source-grounded agent discovery and bounded draft feedback
+
+User Prompt (verbatim, secrets redacted):
+Implement all in best practices
+
+Agent Response Summary:
+Implemented the five-tool single investigator with bounded original-source access, independently validated stable-identity/foreign-key proposals, literal typed JSON and visible boolean field extraction, evidence-driven goals and penultimate-turn draft correction within unchanged model/tool/cost limits. New proof observations preserve original source provenance, explicit copy scope and conjoined availability; row-only extraction cannot become a global negative inventory, and identity caches remain case-local. Added 38 independent regressions, including a mocked tool-using agent producing new proof and a source-backed business verdict change; all prior 235 tests remain passing for 273 total in both working and extracted-source checkouts. Actual sample metrics and all 518 strict predictions remain byte-identical, with 510 contract-valid rows, eight unresolved verdicts and one decided plan gap; offline replay yields four duplicates and five rejections, zero prediction changes and no new paid model calls. Regenerated the 77-file checked source archive and required reports, verified all 103 original dataset hashes and secret exclusions, preserved the root transcript and withheld output.csv.
+
+Actions:
+* Added source_access.py, grounded_extraction.py and agent_context.py; extended investigator.py, proposals.py, ai_auditor.py, identity.py and the per-case solver handoff.
+* Added tests/test_agent_proof_paths.py (38 regressions), updated the tool allowlist regression, and added code/evaluation/replay_agent.py plus Makefile agent-replay/help.
+* Updated docs/agent_capabilities.md, README.md, COMMANDS.md, readiness/AI docs and required evaluation/usage reports.
+* Ran full pytest (273 passed), actual sample evaluation, full strict candidate preflight/validation, offline historical proposal replay, source archive extraction/fresh tests and fresh full execution.
+* Wrote artifacts/agent_capabilities/summary.json and verification.json; rebuilt artifacts/code.zip; no dataset changes, framework additions, API-budget increases or new live requests.
+
+Context:
+tool=Codex Desktop
+model=gpt-6.1-sol
+branch=main
+repo_root=D:\Hackathon\hackerrank-orchestrate-october26
+worktree=D:\Hackathon\hackerrank-orchestrate-october26
+parent_agent=none
+
+## [2026-10-25T08:48:20.439438+00:00] Senior AI engineering scoring and workflow audit
+
+User Prompt (verbatim, secrets redacted):
+Okey sekarang coba analisa dan berpikir bagaimana meng-improve banyak hal terutama agent dan workflow lainnya supaya skornga naik dan tinggi sempurna
+Act as a senior ai engineer
+engineerjangan lupa analisa yang diminta oleh lombanya sesuai semuanya
+Analisa apa yang kurang lengkap yang bisa diperbaiki dan sebagainya lagi pada berbagai aspek
+
+Agent Response Summary:
+Read the official local challenge contract, current source and measured evaluation/replay artifacts. Documented priority gaps across proof coverage, agent investigation, policy, evaluation and submission, with explicit distinctions between verified findings and hypotheses. Reproduced multilingual clause-negation and partial-null state-helper limitations using independent read-only probes; no claim of measured corpus accuracy improvement. Added docs/senior_ai_score_audit.md; no solver, dataset, model call or archive change.
+
+Actions:
+* Inspected source, contract, policy CSV, mismatch diagnostics and existing agent verification reports.
+* Ran independent authorization/state helper probes; verified all 103 dataset hashes unchanged.
+* Added docs/senior_ai_score_audit.md with requirement matrix and prioritized acceptance criteria.
+
+Context:
+tool=Codex Desktop
+model=gpt-6.1-sol
+branch=main
+repo_root=D:\Hackathon\hackerrank-orchestrate-october26
+worktree=D:\Hackathon\hackerrank-orchestrate-october26
+parent_agent=none
+
+
+## [2026-10-25T16:27:00+07:00] Granular project commits across modules
+
+User Prompt (verbatim, secrets redacted):
+commit per beberapa file secara menyuluruh cepat
+
+Agent Response Summary:
+Organized and executed structured, granular Git commits dividing 41 modified and untracked files into 6 thematic groups (build automation, core audit solver, AI agent investigator, submission tooling, evaluation documentation, and conversation logs). Verified all 305 tests pass before committing. Ensured no secrets or ignored artifacts are committed.
+
+Actions:
+* Ran full test suite verifying 305 passed tests.
+* Committed build automation and command reference (Makefile, COMMANDS.md, README.md, package_submission.py).
+* Committed core audit solver, state, policy, and extraction updates with regressions.
+* Committed AI agent auditor, proposal grounding, context management, and investigator tests.
+* Committed submission candidate preparation, replay utilities, and candidate tests.
+* Committed evaluation reports, forensic analysis, and readiness documentation.
+* Committed updated conversation log (log.txt).
+
+Context:
+tool=Antigravity
+model=Gemini 3.8 Flash (High)
+branch=main
+repo_root=D:\Hackathon\hackerrank-orchestrate-october26
+worktree=D:\Hackathon\hackerrank-orchestrate-october26
+parent_agent=none
