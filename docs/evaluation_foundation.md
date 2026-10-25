@@ -2,7 +2,9 @@
 
 This document describes the evaluator milestone: input loading, contract validation, and
 reference comparison. A subsequent evidence-normalization and temporal identity module is
-now available through `ingest`; see `ingestion_identity.md`. The evaluator itself does not
+now available through `ingest`; see `ingestion_identity.md`. Actual prediction generation
+is available through `solve`; see `audit_solver.md`. Evaluation now also reports per-case
+missing/extra steps and mismatch categories without altering matching definitions. The evaluator itself does not
 interpret business evidence, classify deletion intent, infer resource state, or generate
 remediation plans. No model provider or framework is required.
 

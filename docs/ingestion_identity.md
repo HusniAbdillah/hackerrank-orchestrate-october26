@@ -1,6 +1,7 @@
 # Evidence normalization and temporal identity resolution
 
-This iteration adds evidence ingestion and exact identity/resource lookup. It does not
+This document records the ingestion milestone. The subsequent runnable solver is described
+in `audit_solver.md`. At the ingestion milestone the code did not
 produce deletion statuses, infer final resource state, implement remediation planning,
 or call model APIs. Existing evaluation, validation, readiness, and self-test commands remain
 available. The readiness `run` command remains a metadata-only milestone; use `ingest` for
