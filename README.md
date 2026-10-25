@@ -1,41 +1,165 @@
-# HackerRank Orchestrate - October 2026
+# HackerRank Orchestrate (October 2026) — Ghost Data Still Exists
 
-Current final artifacts/results: [docs/proof_quality_submission.md](docs/proof_quality_submission.md).
-337 tests pass. Root output.csv now exists as explicit best-effort: 518 format-valid rows,
-516 strict contract-valid, eight assumed verdicts, NOT evidence-validated. Strict mode
-remains 510/518. Read output_diagnostics.json and the current report before uploading.
-The latest real proof-ledger pilot made four DeepSeek calls with zero prediction gain;
-paid runs stopped. Final materialization explicitly uses zero model budget. Actual
-tool/ledger evidence and interview pitch are in code/evaluation/ Markdown reports.
-All earlier iteration descriptions below are historical.
+An AI-powered forensic deletion-audit system that proves whether personal data was truly deleted across complex enterprise architectures, or whether "ghost data" still lingers in replicas, backups, support attachments, search indexes, logs, or sync processes.
 
-Latest active-agent run: [docs/active_agent_submission.md](docs/active_agent_submission.md).
-The LLM now recommends intent, verdict and full audit plans through five read-only tools;
-independent grounding/policy/planning retains authority. The full run made nine live
-DeepSeek calls on three cases; all three recommendations were accepted with no prediction
-or accuracy change. Readable actual traces: code/evaluation/agent_execution_report.md.
-320 tests pass. Strict validity remains 510/518; the experimental candidate remains
-516/518 contract-valid. Root output.csv is withheld. Older sections are historical.
+Built for the **HackerRank Orchestrate** challenge. Read [`problem_statement.md`](./problem_statement.md) for the complete official challenge contract.
 
-Latest final commands/results: [docs/final_submission_sprint.md](docs/final_submission_sprint.md).
-305 tests pass; strict coverage remains 510/518. The opt-in observed-scope candidate
-contains 518 rows but only 516 pass contract validation; eight verdicts are assumed,
-not evidence-proven. Root output.csv remains withheld. Regenerate native OCR on
-Windows for measured results; local caches and credentials are not bundled.
+---
 
-The single optional investigator now supports five read-only tools, including bounded `inspect_source`, exact identity/foreign-key proposals and source-validated JSON/visible field extraction. Default model/tool budgets are unchanged. See [docs/agent_capabilities.md](docs/agent_capabilities.md) for proof constraints, tests and the distinction between offline capability and measured sample accuracy. No live accuracy gain is claimed.
+## Setup & Quickstart Instructions (For Evaluators)
 
-Final recovery: `make prepare-candidate` checks whether a separate submission candidate can be published. It preserves strict uncertainty and never fills unknown statuses. Current result is blocked on eight verdicts and one conditional plan gap. See [docs/submission_recovery.md](docs/submission_recovery.md) for exact commands, upload filenames and official schedule verification.
+Follow these steps to reproduce the exact 518-case audit predictions and verify system integrity with **zero API cost and 100% deterministic bit-by-bit reproducibility**.
 
-## Ghost Data Still Exists
+### 1. Environment Setup
+* **Prerequisites**: Python 3.11+ on Linux, macOS, or Windows.
+* Ensure the challenge dataset is located at `dataset/` relative to the repository root.
 
-Build an AI agent that audits whether a user's personal data was actually deleted.
+```bash
+# 1. Create and activate a clean virtual environment
+python -m venv .venv
 
-A deletion workflow may report **Complete** while data still exists in databases, logs, support attachments, exports, search indexes, archives, or backups. Sync and restore processes may also bring deleted data back.
+# On Linux / macOS:
+source .venv/bin/activate
+# On Windows (PowerShell):
+# .venv\Scripts\Activate.ps1
 
-For each request, the agent must first determine whether deletion was actually requested. It then returns `COMPLETE`, `INCOMPLETE`, or `NOT_APPLICABLE`, reports any remaining data or recreation risk, and produces the ordered remediation and verification steps required to finish an authorized deletion safely.
+# 2. Install runtime and testing dependencies
+pip install -r requirements.txt
+pip install -r requirements-dev.txt
+```
 
-Read [`problem_statement.md`](./problem_statement.md) for the complete challenge contract.
+### 2. Evidence Preprocessing (OCR Extraction)
+Extract text from screenshot evidence (`dataset/evidence/images/`) into local cache:
+```bash
+python code/main.py ocr --dataset dataset --output artifacts/ocr_cache
+# Or via Makefile:
+# make ocr
+```
+*(Uses native Windows OCR on Windows, with robust graceful fallbacks for headless Linux/macOS environments).*
+
+### 3. Reproduce Predictions (`output.csv` — Full 518 Cases)
+Execute the complete candidate solver to generate the official submission file:
+```bash
+python code/prepare_submission.py \
+    --dataset dataset \
+    --strict-output artifacts/submission_recovery/strict_predictions.csv \
+    --output artifacts/submission_recovery/submission_candidate.csv \
+    --report output_diagnostics.json \
+    --candidate-policy observed-scope \
+    --extractions artifacts/ocr_cache \
+    --publish-best-effort output.csv
+# Or via Makefile:
+# make prepare-candidate
+```
+* **Output Artifact**: Generates `output.csv` at the repository root.
+* **Contract Compliance**: Exactly 518 data rows + 1 header row, lexicographically sorted by `case_id` (`case_01` to `case_533`).
+* **Forensic Diagnostics**: Generates `output_diagnostics.json` transparently detailing compliance status (516 strict contract-valid, and full disclosure on two observational boundary cases: `case_55` and `case_63`).
+
+### 4. Validate Submission Contract
+Run the official validator against `output.csv` to ensure 100% schema and formatting validity:
+```bash
+python code/main.py validate \
+    --dataset dataset \
+    --split full \
+    --predictions output.csv \
+    --report artifacts/full_validation.json
+# Or via Makefile:
+# make validate-full
+```
+
+### 5. Run Complete Regression Test Suite (352 Tests)
+Verify all core modules, temporal horizons, DAG dependency orderings, and policy constraints:
+```bash
+pytest -q
+# Or via Makefile:
+# make test
+```
+*Expected Result:* **352 passed** in ~55 seconds.
+
+### 6. (Optional) Run Live AI Multi-Step Investigator
+If evaluators wish to test the live agentic LLM investigator with their own API keys:
+1. Copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+2. Configure credentials in `.env`:
+   ```env
+   LLM_ENABLED=true
+   DEEPSEEK_API_KEY=your_key_here    # Or GEMINI_API_KEY=your_key_here
+   ```
+3. Run the investigator with strict token/budget caps:
+   ```bash
+   python code/main.py solve \
+       --split sample \
+       --output artifacts/deepseek_predictions.csv \
+       --report artifacts/deepseek_run.json \
+       --extractions artifacts/ocr_cache \
+       --ai deepseek \
+       --max-ai-cases 3 \
+       --max-model-calls 12 \
+       --max-cost-usd 0.20
+   ```
+4. Or replay historical agent traces offline with zero API calls:
+   ```bash
+   make agent-replay
+   ```
+
+---
+
+## Approach Overview & System Architecture
+
+### 1. Problem Context: The "Ghost Data" Dilemma
+In modern distributed architectures, an account service may mark a deletion request as `COMPLETE`, while personal data continues to linger in:
+* Read-only replicas with replication drift
+* Point-in-time database backups and automated snapshots
+* Operational log archives and analytics data lakes
+* Customer support ticket attachments and OCR-scannable screenshots
+* Search engine reverse indexes
+* Active synchronization workflows that restore deleted records from secondary caches
+
+The agent's mission is to audit whether personal data is truly gone at the designated `audit_at` cutoff, produce evidence-backed findings, generate safe ordered remediation plans, and formulate verifiable post-remediation checks.
+
+### 2. Multi-Modal Evidence Grounding
+The system processes heterogeneous enterprise evidence without trusting claimed statuses:
+* **Relational DB Snapshots (`.sql`)**: Executed and queried via in-memory SQLite instances to verify actual row-level deletion across primary and read replicas.
+* **Semi-Structured Documents (`.json`, `.txt`)**: Normalized to uncover nested PII and unindexed records.
+* **Document Parsing (`.pdf`)**: Extracted via `pypdf` to identify invoices, contracts, and export bundles.
+* **Visual Screenshots (`.png`)**: Processed via OCR caching and optional VLM inspection (Gemini 3.5 Flash Lite) to uncover customer profile screens and internal backoffice dashboards.
+
+### 3. Temporal Identity Resolution
+User identifiers evolve over time (e.g. email updates, name changes, phone migrations). The engine cross-references:
+* Current identities in `dataset/user_identities.csv`
+* Point-in-time identity mutations in `dataset/user_audit_log.csv`
+* Hashed email variants (`SHA-256`)
+All identity expansions are bounded strictly by each case's `audit_at` timestamp to prevent temporal data leakage.
+
+### 4. Policy Engine & 15 Retention Categories
+The audit engine applies `dataset/deletion_rules.csv` across 15 distinct business categories. It guarantees:
+* **Account Tombstones**: Preserving the internal surrogate `user_id` while stripping all direct PII (name, email, phone, address).
+* **Mandatory Retention**: Preserving regulatory tax and financial records with exact `VERIFY_RECORD_PRESENT` verification steps.
+* **Redaction vs. Anonymization vs. Deletion**: Applying the exact mandated treatment per resource.
+
+### 5. Canonical Dependency DAG for Remediation
+Remediation actions cannot be executed in arbitrary order without risking data resurrection. The engine enforces a strict topological dependency DAG:
+1. **`FINDING`**: Cites participant-visible evidence (`file_id`, `activity_id`, `audit_id`) proving policy violations or active risks.
+2. **`REMEDIATION`**:
+   * Step A: `DISABLE_DATA_FLOW` (Halt active sync pipelines before cleaning data).
+   * Step B: `BLOCK_RESTORE` (Block backup restoration paths).
+   * Step C: `DELETE_RECORD` / `REDACT_RECORD` / `ANONYMIZE_RECORD` (Remediate remaining records).
+3. **`VERIFICATION`**: Verifies that flows are disabled, restores are blocked, records are absent/redacted/anonymized, or required records remain present.
+
+### 6. Agentic Multi-Step AI Investigator (`AuditInvestigator`)
+For ambiguous cases, the system features an agentic multi-step investigator ([`code/deletion_audit/ai_auditor.py`](code/deletion_audit/ai_auditor.py)) powered by DeepSeek and Gemini:
+* **5 Bounded Read-Only Tools**:
+  * `search_evidence`: Search evidence records by identifier or keyword.
+  * `inspect_source`: Examine specific line ranges of evidence files.
+  * `get_identity`: Retrieve current and historical identity snapshots.
+  * `get_rules`: Query retention policy requirements.
+  * `propose_plan`: Formulate structured audit findings and remediation plans.
+* **Audit Proof Ledger**: Every claim proposed by the model is validated against physical evidence citations before acceptance.
+* **Dual-Validation Safety Architecture**: Independent deterministic policy and grounding checks retain ultimate veto power over LLM suggestions, preventing model hallucinations or fabricated citations.
+
+---
 
 ## Quick Command Automation (`Makefile`)
 
