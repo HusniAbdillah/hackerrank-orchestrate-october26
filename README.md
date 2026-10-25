@@ -332,3 +332,12 @@ Before submitting, confirm that:
 ### Latest bounded agent correction pilot
 
 See [docs/agent_corrections_readiness.md](docs/agent_corrections_readiness.md) for exact commands, real traces and cost. Pagination and one bounded grounding correction are implemented; same-ID vision enrichments reach a case-local solver copy. `--ai-case-id` explicitly investigates selected cases even if the deterministic decision is sufficient; it still requires grounded resource candidates and does not change evidence validation. Seven successful live calls yielded zero new facts or accuracy gain, so further paid experimentation was stopped. Full validity remains 510/518; `output.csv` is not published.
+
+
+## Experimental blind-first mode (not promoted)
+
+`--ai agent-led` is a separate blind-first, source-certificate and independent-obligation
+experiment. Its four-call pilot produced no valid final JSON and no prediction improvement.
+The stable submission archive/output are retained. See docs/agent_led_experiment.md and
+code/evaluation/agent_led_execution_report.md for exact calls, costs, limitations and commands.
+It cannot publish root output.csv or --submission-output before a separate promotion decision.

@@ -19,6 +19,17 @@ def render(runs):
             "Case execution counts: `" + json.dumps(run.get("ai_case_counts", {}), sort_keys=True) + "`", ""]
         for event in run.get("ai_investigations", []):
             if "audit_recommendation" not in event:
+                if event.get("tool_trace"):
+                    lines += ["### " + event["case_id"] + " — no validated final recommendation", "",
+                        "Execution: **" + event.get("status", "UNKNOWN") + "**; error: `" + event.get("error", "") + "`.",
+                        "Partial model output is not repaired or counted as an accepted recommendation.", "",
+                        "| Round | Tool | Arguments | Validation / result |", "| --- | --- | --- | --- |"]
+                    for tool in event["tool_trace"]:
+                        result = tool["result"]
+                        detail = {k: result[k] for k in ("error", "observation_id", "file_id", "shown_count", "total_count", "truncated") if k in result}
+                        lines.append("| " + " | ".join(map(cell, [tool["round_id"], tool["name"],
+                            json.dumps(tool["arguments"], ensure_ascii=False), json.dumps(detail, ensure_ascii=False)])) + " |")
+                    lines += [""]
                 continue
             rec, validation = event["audit_recommendation"], event["recommendation_validation"]
             lines += ["### " + event["case_id"], "",

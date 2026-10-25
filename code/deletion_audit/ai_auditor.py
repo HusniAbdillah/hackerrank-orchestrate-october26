@@ -86,7 +86,7 @@ class AuditInvestigator:
                 max_tools = int(os.environ.get("LLM_MAX_TOOL_CALLS", 6))
             except ValueError as exc:
                 raise InputError("Invalid tool-call limit") from exc
-        if mode not in {"deepseek", "gemini", "auto"}:
+        if mode not in {"deepseek", "gemini", "auto", "agent-led"}:
             raise InputError("Invalid AI routing mode")
         if not (0 <= max_cases <= 518 and 0 <= max_calls <= 1000 and 0 <= max_cost_usd <= 20
                 and 1 <= max_rounds <= 8 and 1 <= max_tools <= 30 and 1 <= case_seconds <= 300):
@@ -104,22 +104,37 @@ class AuditInvestigator:
         self.events = []
         self.selected = 0
         self.allow_vision, self.case_ids = allow_vision, set(case_ids or [])
-        self.audit_mode = audit_mode
+        self.agent_led = mode == "agent-led"
+        self.audit_mode = audit_mode or self.agent_led
         from .recommendations import AUDIT_PROPOSAL_SCHEMA
-        self.schema = AUDIT_PROPOSAL_SCHEMA if audit_mode else PROPOSAL_SCHEMA
+        self.schema = AUDIT_PROPOSAL_SCHEMA if self.audit_mode else PROPOSAL_SCHEMA
+        if self.agent_led:
+            from .agent_led import SCHEMA
+            self.schema = SCHEMA
 
     def _ground(self, proposal, tools):
+        if self.agent_led:
+            from .agent_led import grounded
+            updates, results, certificates = grounded(proposal, tools)
+            return updates, results + certificates
         return ground_proposal({k: proposal[k] for k in PROPOSAL_SCHEMA["properties"]}, tools)
 
+    def _assess(self, proposal, tools, trace):
+        if self.agent_led:
+            from .agent_led import verify
+            return verify(proposal, tools)
+        from .recommendations import assess_recommendation
+        return assess_recommendation(proposal, tools, trace)
+
     def _provider(self, diagnostic):
-        if self.mode != "auto":
+        if self.mode not in {"auto", "agent-led"}:
             return self.providers[self.mode]
         visual = any(i["code"] == "OCR_SUBJECT_LINK_UNCORROBORATED" for i in diagnostic["issues"])
         return self.providers[os.environ.get("LLM_VISION_PROVIDER", "gemini") if visual else os.environ.get("LLM_TEXT_PROVIDER", "deepseek")]
 
     def _key(self, tools, baseline, provider, image_hash=None):
         hashes = sorted({o.provenance.get("sha256", "") for o in tools.store.observations})
-        return fingerprint({"prompt_version": PROMPT_VERSION, "schema_version": SCHEMA_VERSION,
+        return fingerprint({"prompt_version": PROMPT_VERSION + ("-blind-first-2" if self.agent_led else ""), "schema_version": SCHEMA_VERSION,
             "provider": provider.config.provider, "model": provider.config.model,
             "case": {"case_id": tools.request.case_id, "email": tools.request.email}, "cutoff": tools.request.audit_at.isoformat(),
             "request": tools.request.request_text, "hashes": hashes,
@@ -192,9 +207,11 @@ class AuditInvestigator:
             event["proposal"] = proposal
             accepted, verdicts = self._ground(proposal, tools)
             if self.audit_mode:
-                from .recommendations import assess_recommendation
                 event["audit_recommendation"] = proposal["audit_recommendation"]
-                event["recommendation_validation"] = assess_recommendation(proposal, tools, event["tool_trace"])
+                event["recommendation_validation"] = self._assess(proposal, tools, event["tool_trace"])
+                if self.agent_led:
+                    event["baseline_comparison"] = {"diagnostic_only": True,
+                        "status_agrees": proposal["audit_recommendation"]["recommended_deletion_status"] == baseline.get("submission_status")}
             event["accepted"] = [v for v in verdicts if v["validation"] == "SOURCE_GROUNDED"]
             event["rejected"] = [v for v in verdicts if v["validation"] == "REJECTED"]
             event["proof_delta_counts"] = {name: sum(v.get("proof_delta") == name for v in verdicts)
@@ -209,11 +226,18 @@ class AuditInvestigator:
                    "email": tools.request.email, "audit_at": tools.request.audit_at.isoformat(),
                    "baseline": compact(baseline), "identity": compact(tools.trace_identity()),
                    "investigation": investigation_context(tools, baseline)}
+        if self.agent_led:
+            from .agent_led import blind_context
+            context = blind_context(tools)
         system = SYSTEM
         if self.audit_mode:
             from .recommendations import AUDIT_INSTRUCTIONS
             system = system.replace("Never choose deletion_status, prescribe new operations, guess resource IDs from case numbers,",
                 "Never set the final CSV status, execute remediation, guess resource IDs from case numbers,") + AUDIT_INSTRUCTIONS
+        if self.agent_led:
+            from .agent_led import INSTRUCTIONS
+            system = system.replace("See baseline resource_keys.", "Use the supplied source/identity index.")
+            system += INSTRUCTIONS
         messages = [{"role": "system", "content": system + "\nFinal JSON schema: " + json.dumps(self.schema)},
                     {"role": "user", "content": json.dumps(context, ensure_ascii=False, default=str)}]
         deadline = time.monotonic() + self.case_seconds
@@ -222,6 +246,8 @@ class AuditInvestigator:
         for round_no in range(self.max_rounds):
             final = round_no == self.max_rounds - 1 or calls >= self.max_tools or corrections > 0
             draft = not self.audit_mode and self.max_rounds >= 3 and round_no == self.max_rounds - 2 and not continuation_needed and not final
+            if self.agent_led and self.max_rounds >= 3 and round_no == self.max_rounds - 2 and not final:
+                draft = True  # Reserve one existing turn for independently verified correction.
             structured = final or draft
             if final:
                 messages.append({"role": "user", "content": "Finish now with the required JSON object. Keep genuinely missing evidence unresolved."})
@@ -253,6 +279,9 @@ class AuditInvestigator:
                         if tool is None:
                             raise InputError("UNSUPPORTED_TOOL")
                         validate_json(call["arguments"], tool["parameters"])
+                        if self.agent_led and call["name"] == "explain_policy" and any(
+                                t["name"] == "explain_policy" and t["budget_consumed"] for t in event["tool_trace"]):
+                            raise InputError("POLICY_PRELOADED_RESERVE_TOOLS_FOR_SOURCE_INSPECTION")
                         if calls >= self.max_tools:
                             raise InputError("TOOL_BUDGET_EXHAUSTED")
                         result = compact(tools.invoke(call["name"], call["arguments"]))
@@ -276,8 +305,7 @@ class AuditInvestigator:
                 _, verdicts = self._ground(value, tools)
                 errors = [v for v in verdicts if v["validation"] == "REJECTED"]
                 if self.audit_mode:
-                    from .recommendations import assess_recommendation
-                    assessment = assess_recommendation(value, tools, event["tool_trace"])
+                    assessment = self._assess(value, tools, event["tool_trace"])
                     trace["recommendation_validation"] = assessment
                     errors += assessment["issues"]
                 for verdict in verdicts:

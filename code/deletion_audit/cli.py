@@ -26,7 +26,7 @@ def main(argv=None) -> int:
             command.add_argument("--output", type=Path, required=True)
             command.add_argument("--extractions", type=Path, help="Optional SHA-256-bound local OCR cache")
             command.add_argument("--submission-output", type=Path, help="Publish only when all full-split verdicts, proof scopes and contract checks pass")
-            command.add_argument("--ai", choices=("none", "deepseek", "gemini", "auto"), default="none")
+            command.add_argument("--ai", choices=("none", "deepseek", "gemini", "auto", "agent-led"), default="none")
             command.add_argument("--ai-cache", type=Path, default=ROOT / "artifacts/ai_cache")
             command.add_argument("--max-ai-cases", type=int, default=32)
             command.add_argument("--max-model-calls", type=int, default=96)

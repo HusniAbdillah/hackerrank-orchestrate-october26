@@ -29,6 +29,7 @@ def publish_best_effort(report, dataset: Path, destination: Path):
     with tempfile.NamedTemporaryFile(dir=destination.parent, delete=False) as stream:
         temporary = Path(stream.name); stream.write(source.read_bytes())
     try:
+        destination.unlink(missing_ok=True)
         temporary.replace(destination)
     finally:
         temporary.unlink(missing_ok=True)
@@ -112,43 +113,6 @@ def prepare(dataset: Path, strict_output: Path, candidate_output: Path,
         for row in candidate_rows:
             case = rows[row["case_id"]]
             if case["verdict_resolved"]:
-                continue
-            cid = row["case_id"]
-            if cid == "case_55":
-                # Active restore risk on backup_service/backup_9287 linked via activity_4006
-                row["deletion_status"] = "INCOMPLETE"
-                steps = [
-                    {"step_no": 1, "phase": "FINDING", "system_id": "backup_service", "resource_id": "backup_9287",
-                     "operation": "REPORT_RESTORE_RISK", "state": "ACTIVE", "evidence_id": "activity_4006"},
-                    {"step_no": 2, "phase": "REMEDIATION", "system_id": "backup_service", "resource_id": "backup_9287",
-                     "operation": "BLOCK_RESTORE", "state": "BLOCKED", "evidence_id": ""},
-                    {"step_no": 3, "phase": "VERIFICATION", "system_id": "backup_service", "resource_id": "backup_9287",
-                     "operation": "VERIFY_RESTORE_BLOCKED", "state": "BLOCKED", "evidence_id": ""}
-                ]
-                row["steps_json"] = json.dumps(steps, separators=(",", ":"))
-                assumptions.append({"case_id": cid, "candidate_status": "INCOMPLETE",
-                    "evidence_established": True, "strict_status": None,
-                    "assumption": "Restore risk on backup_9287 established by activity_4006 prior to audit_at; request NOT_STARTED.",
-                    "known_verification_count": 1, "issues": case["issues"],
-                    "false_complete_risk": False})
-                continue
-            if cid == "case_63":
-                # Remaining marketing record on marketing_platform/marketing_001 in evidence_60
-                row["deletion_status"] = "INCOMPLETE"
-                steps = [
-                    {"step_no": 1, "phase": "FINDING", "system_id": "marketing_platform", "resource_id": "marketing_001",
-                     "operation": "REPORT_REMAINING_RECORD", "state": "PRESENT", "evidence_id": "evidence_60"},
-                    {"step_no": 2, "phase": "REMEDIATION", "system_id": "marketing_platform", "resource_id": "marketing_001",
-                     "operation": "DELETE_RECORD", "state": "ABSENT", "evidence_id": ""},
-                    {"step_no": 3, "phase": "VERIFICATION", "system_id": "marketing_platform", "resource_id": "marketing_001",
-                     "operation": "VERIFY_RECORD_ABSENT", "state": "ABSENT", "evidence_id": ""}
-                ]
-                row["steps_json"] = json.dumps(steps, separators=(",", ":"))
-                assumptions.append({"case_id": cid, "candidate_status": "INCOMPLETE",
-                    "evidence_established": True, "strict_status": None,
-                    "assumption": "Remaining marketing record on marketing_001 established by evidence_60 and activity_4008.",
-                    "known_verification_count": 1, "issues": case["issues"],
-                    "false_complete_risk": False})
                 continue
             partial = case.get("grounded_partial_steps", [])
             if any(s["phase"] != "VERIFICATION" or not s["evidence_id"] for s in partial):

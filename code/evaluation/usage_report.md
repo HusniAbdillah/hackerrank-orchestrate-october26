@@ -219,3 +219,19 @@ Reproduce aggregation with code/evaluation/aggregate_usage.py --run <report> (re
 non-overlapping physical run) --output artifacts/usage_totals.json. Per-run reports retain
 configured limits, returned models, errors, latency, tool traces, proposals/rejections and
 token/cost records. Cache hits are explicit. No credential values are recorded or packaged.
+
+
+## Unpromoted blind-first experiment (separate from selected output)
+
+A new `--ai agent-led` pilot investigated one sample, case_29: DeepSeek/deepseek-flash,
+four successful generation calls, 45,023 input and 4,740 output tokens, USD 0.0191949
+estimate using USD 0.30/1.20 per million, 20.890 seconds summed provider latency.
+Final JSON was truncated and rejected. Zero accepted live certificates, novel facts,
+corrected obligations or changed predictions. Full 32-row paired end-to-end metrics
+remain identical (status 90.625%, exact/sequence 28.125%, F1 89.325843%, field 77.447426%).
+Baseline-informed comparison used one historical cache hit, zero new generations.
+This experiment did NOT produce the selected root output.csv and its costs are not
+charged to that zero-new-call materialization. No paid full agent-led batch was run.
+Promotion is NO-GO; stable output and archive remain. Version 2 source-index/draft
+corrections are regression-tested only, not live-qualified. See docs/agent_led_experiment.md
+and code/evaluation/agent_led_execution_report.md for actual tools and failure details.

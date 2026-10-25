@@ -238,6 +238,9 @@ def decide_case(request, store, graph, policy) -> AuditDecision:
 
 def solve(dataset: Path, split: str, output: Path, extractions: Path | None = None,
           submission_output: Path | None = None, ai=None) -> dict:
+    if getattr(ai, "agent_led", False) and (submission_output is not None or
+            output.resolve() == (dataset.resolve().parent / "output.csv")):
+        raise InputError("Experimental agent-led mode cannot publish submission output before promotion")
     protect_output(output, dataset)
     if extractions and output.resolve().is_relative_to(extractions.resolve()):
         raise InputError("Prediction output must not overwrite the extraction cache")
@@ -273,6 +276,7 @@ def solve(dataset: Path, split: str, output: Path, extractions: Path | None = No
     for cid in execution:
         request = requests[cid]
         decision = prepared[cid] if cid in prepared else decide_case(request, store, graph, policy)
+        baseline_decision = decision
         if ai is not None:
             from .investigator import AuditTools
             accepted = ai.investigate(AuditTools(request, store, graph, policy), decision.diagnostic)
@@ -294,8 +298,22 @@ def solve(dataset: Path, split: str, output: Path, extractions: Path | None = No
                 decision = updated
             if ai.events:
                 event = ai.events[-1]
+                if getattr(ai, "agent_led", False):
+                    verified = event.get("recommendation_validation", {})
+                    event["experimental_only"] = True
+                    event["independent_candidate"] = {"status": verified.get("independent_status"),
+                        "steps": verified.get("canonical_steps", []),
+                        "scope_complete": verified.get("plan_scope_complete", False)}
+                    # A separate experimental CSV may use a fully verified agent plan.
+                    # Submission promotion still requires a measured external gate.
+                    if verified.get("validation") == "ACCEPTED" and verified.get("plan_scope_complete"):
+                        decision = replace(decision, status=verified["independent_status"],
+                            steps=verified["canonical_steps"], diagnostic=dict(decision.diagnostic))
+                        decision.diagnostic["agent_led_verified_candidate"] = True
                 changed = bool(decision.diagnostic.get("ai_effects", {}).get("status_changed") or
                                decision.diagnostic.get("ai_effects", {}).get("steps_changed"))
+                if getattr(ai, "agent_led", False):
+                    changed = decision.status != baseline_decision.status or decision.steps != baseline_decision.steps
                 for goal in event.get("recommendation_validation", {}).get("proof_ledger", []):
                     goal["canonical_prediction_changed"] = changed
                     goal["change_attribution"] = "Case-level delta; not an isolated causal claim about this goal"

@@ -18,7 +18,7 @@ def main(argv=None):
     parser.add_argument("--extractions", type=Path)
     parser.add_argument("--candidate-policy", choices=["strict", "observed-scope"], default="strict",
                         help="observed-scope is an experimental completion assumption, never evidence validation")
-    parser.add_argument("--ai", choices=["none", "auto", "deepseek", "gemini"], default="none")
+    parser.add_argument("--ai", choices=["none", "auto", "deepseek", "gemini", "agent-led"], default="none")
     parser.add_argument("--ai-cache", type=Path, default=root / "artifacts/ai_cache")
     parser.add_argument("--max-ai-cases", type=int, default=3)
     parser.add_argument("--max-model-calls", type=int, default=12)
@@ -28,6 +28,8 @@ def main(argv=None):
     parser.add_argument("--publish-best-effort", type=Path,
         help="Explicit format-only publication; preserves all strict failures and uncertainty in report")
     args = parser.parse_args(argv)
+    if args.ai == "agent-led" and args.publish_best_effort:
+        parser.error("Experimental agent-led mode cannot publish before promotion")
     try:
         protect_output(args.report, args.dataset, args.strict_output, args.output)
         if args.extractions and args.report.resolve().is_relative_to(args.extractions.resolve()):
