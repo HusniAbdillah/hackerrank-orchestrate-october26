@@ -149,6 +149,9 @@ class Provider:
                 if "properties" in node:
                     result["properties"] = {k: native_schema(v) for k, v in node["properties"].items()}
                 for key in ("required", "enum"):
+                    # Gemini rejects empty enum strings; local validation remains strict.
+                    if key == "enum" and node.get(key) == [""]:
+                        continue
                     if node.get(key):
                         result[key] = node[key]
                 if "items" in node:
