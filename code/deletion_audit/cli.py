@@ -34,6 +34,8 @@ def main(argv=None) -> int:
             command.add_argument("--ai-case-id", action="append", default=[], help="Optional explicit pilot selection; all request rows still generated")
             command.add_argument("--vision", action="store_true", help="Permit Gemini vision only for flagged OCR ambiguity")
             command.add_argument("--ai-case-seconds", type=float, default=90)
+            command.add_argument("--ai-max-rounds", type=int, default=3)
+            command.add_argument("--ai-max-tools", type=int, default=6)
         if name == "ocr":
             command.add_argument("--output", type=Path, required=True, help="Extraction cache directory outside dataset/")
         if name == "ingest":
@@ -66,7 +68,8 @@ def main(argv=None) -> int:
                     raise InputError("Outputs must not overwrite the investigator cache")
                 ai = AuditInvestigator(args.dataset, args.ai, cache=args.ai_cache,
                     max_cases=args.max_ai_cases, max_calls=args.max_model_calls, max_cost_usd=args.max_cost_usd,
-                    allow_vision=args.vision, case_ids=args.ai_case_id, case_seconds=args.ai_case_seconds)
+                    allow_vision=args.vision, case_ids=args.ai_case_id, case_seconds=args.ai_case_seconds,
+                    max_rounds=args.ai_max_rounds, max_tools=args.ai_max_tools, audit_mode=True)
             report = solve(args.dataset, args.split, args.output, args.extractions, args.submission_output, ai=ai)
             exit_code = 0 if report["validation"]["valid"] and report["dataset_integrity"]["unchanged"] else 1
         elif args.command == "ingest":
