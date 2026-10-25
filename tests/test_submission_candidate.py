@@ -70,3 +70,22 @@ def test_experimental_cannot_be_named_final_output(tmp_path):
     with pytest.raises(InputError, match="distinct filename"):
         candidate.prepare(tmp_path / "dataset", tmp_path / "strict.csv", tmp_path / "output.csv",
                           candidate_policy="observed-scope")
+
+
+def test_explicit_format_only_publication_retains_strict_failures(tmp_path, monkeypatch):
+    setup_run(monkeypatch, "")
+    report=candidate.prepare(tmp_path/'dataset',tmp_path/'strict.csv',tmp_path/'experimental.csv',candidate_policy='observed-scope')
+    result=candidate.publish_best_effort(report,tmp_path/'dataset',tmp_path/'output.csv')
+    assert (tmp_path/'output.csv').exists() and result['format_valid']
+    assert not result['strict_contract_valid'] and not result['evidence_validated']
+    assert result['strict_failures'][0]['code']=='STATUS_SHAPE'
+
+
+def test_tampered_candidate_cannot_replace_existing_output(tmp_path, monkeypatch):
+    setup_run(monkeypatch, "")
+    report=candidate.prepare(tmp_path/'dataset',tmp_path/'strict.csv',tmp_path/'experimental.csv',candidate_policy='observed-scope')
+    (tmp_path/'experimental.csv').write_text('tampered',encoding='utf-8')
+    target=tmp_path/'output.csv';target.write_bytes(b'previous best')
+    with pytest.raises(InputError,match='hash mismatch'):
+        candidate.publish_best_effort(report,tmp_path/'dataset',target)
+    assert target.read_bytes()==b'previous best'

@@ -1,0 +1,401 @@
+{
+  "publication": {
+    "path": "output.csv",
+    "role": "EXPERIMENTAL_BEST_EFFORT",
+    "format_valid": true,
+    "strict_contract_valid": false,
+    "evidence_validated": false,
+    "strict_failures": [
+      {
+        "code": "STATUS_SHAPE",
+        "message": "COMPLETE requires evidence-backed verification",
+        "case_id": "case_55",
+        "row_no": 474,
+        "step_no": null
+      },
+      {
+        "code": "STATUS_SHAPE",
+        "message": "COMPLETE requires evidence-backed verification",
+        "case_id": "case_63",
+        "row_no": 483,
+        "step_no": null
+      }
+    ],
+    "assumption_case_ids": [
+      "case_46",
+      "case_506",
+      "case_512",
+      "case_524",
+      "case_530",
+      "case_532",
+      "case_55",
+      "case_63"
+    ],
+    "sha256": "4263f02a16d30b525c0cc9ff4fb9ee62657ebcb26d8aec65475cef8287b88aab"
+  },
+  "candidate_assumptions": [
+    {
+      "case_id": "case_46",
+      "candidate_status": "COMPLETE",
+      "evidence_established": false,
+      "strict_status": null,
+      "assumption": "Observed-scope completion only: unresolved obligations are assumed compliant. This does not prove global COMPLETE.",
+      "known_verification_count": 1,
+      "issues": [
+        {
+          "code": "NO_DIRECT_STATE",
+          "system_id": "identity_service",
+          "resource_id": "tombstone_17"
+        }
+      ],
+      "false_complete_risk": true
+    },
+    {
+      "case_id": "case_506",
+      "candidate_status": "COMPLETE",
+      "evidence_established": false,
+      "strict_status": null,
+      "assumption": "Observed-scope completion only: unresolved obligations are assumed compliant. This does not prove global COMPLETE.",
+      "known_verification_count": 1,
+      "issues": [
+        {
+          "code": "PRIMARY_PROFILE_VERIFICATION_UNGROUNDED",
+          "detail": "Known retained/downstream resources do not prove the account's required final state"
+        }
+      ],
+      "false_complete_risk": true
+    },
+    {
+      "case_id": "case_512",
+      "candidate_status": "COMPLETE",
+      "evidence_established": false,
+      "strict_status": null,
+      "assumption": "Observed-scope completion only: unresolved obligations are assumed compliant. This does not prove global COMPLETE.",
+      "known_verification_count": 1,
+      "issues": [
+        {
+          "code": "PRIMARY_PROFILE_VERIFICATION_UNGROUNDED",
+          "detail": "Known retained/downstream resources do not prove the account's required final state"
+        }
+      ],
+      "false_complete_risk": true
+    },
+    {
+      "case_id": "case_524",
+      "candidate_status": "COMPLETE",
+      "evidence_established": false,
+      "strict_status": null,
+      "assumption": "Observed-scope completion only: unresolved obligations are assumed compliant. This does not prove global COMPLETE.",
+      "known_verification_count": 1,
+      "issues": [
+        {
+          "code": "PRIMARY_PROFILE_VERIFICATION_UNGROUNDED",
+          "detail": "Known retained/downstream resources do not prove the account's required final state"
+        }
+      ],
+      "false_complete_risk": true
+    },
+    {
+      "case_id": "case_530",
+      "candidate_status": "COMPLETE",
+      "evidence_established": false,
+      "strict_status": null,
+      "assumption": "Observed-scope completion only: unresolved obligations are assumed compliant. This does not prove global COMPLETE.",
+      "known_verification_count": 1,
+      "issues": [
+        {
+          "code": "PRIMARY_PROFILE_VERIFICATION_UNGROUNDED",
+          "detail": "Known retained/downstream resources do not prove the account's required final state"
+        }
+      ],
+      "false_complete_risk": true
+    },
+    {
+      "case_id": "case_532",
+      "candidate_status": "COMPLETE",
+      "evidence_established": false,
+      "strict_status": null,
+      "assumption": "Observed-scope completion only: unresolved obligations are assumed compliant. This does not prove global COMPLETE.",
+      "known_verification_count": 4,
+      "issues": [
+        {
+          "code": "PRIMARY_PROFILE_VERIFICATION_UNGROUNDED",
+          "detail": "Known retained/downstream resources do not prove the account's required final state"
+        }
+      ],
+      "false_complete_risk": true
+    },
+    {
+      "case_id": "case_55",
+      "candidate_status": "COMPLETE",
+      "evidence_established": false,
+      "strict_status": null,
+      "assumption": "Observed-scope completion only: unresolved obligations are assumed compliant. This does not prove global COMPLETE.",
+      "known_verification_count": 0,
+      "issues": [
+        {
+          "code": "NO_DIRECT_STATE",
+          "system_id": "backup_service",
+          "resource_id": "backup_9287"
+        }
+      ],
+      "false_complete_risk": true
+    },
+    {
+      "case_id": "case_63",
+      "candidate_status": "COMPLETE",
+      "evidence_established": false,
+      "strict_status": null,
+      "assumption": "Observed-scope completion only: unresolved obligations are assumed compliant. This does not prove global COMPLETE.",
+      "known_verification_count": 0,
+      "issues": [
+        {
+          "code": "OCR_SUBJECT_LINK_UNCORROBORATED",
+          "resource_id": "marketing_001"
+        }
+      ],
+      "false_complete_risk": true
+    }
+  ],
+  "blocked_cases": [
+    {
+      "case_id": "case_34",
+      "audit_at": "2026-09-27T13:00:00+00:00",
+      "deletion_authorized": true,
+      "strict_status": "INCOMPLETE",
+      "kind": "CONDITIONAL_PLAN_GAP",
+      "issues": [
+        {
+          "code": "RETENTION_CONDITION_UNPROVEN",
+          "resource_id": "audit_record_3753"
+        }
+      ],
+      "assumption_applied": false,
+      "rejected_forced_format_options": {
+        "plan_complete": "Would assume an unproved resource-specific policy condition or invent a treatment."
+      }
+    },
+    {
+      "case_id": "case_46",
+      "audit_at": "2026-03-11T08:00:00+00:00",
+      "deletion_authorized": true,
+      "strict_status": null,
+      "kind": "UNRESOLVED_VERDICT",
+      "issues": [
+        {
+          "code": "NO_DIRECT_STATE",
+          "system_id": "identity_service",
+          "resource_id": "tombstone_17"
+        }
+      ],
+      "assumption_applied": false,
+      "rejected_forced_format_options": {
+        "COMPLETE": "Would assume missing/conflicting required final-state proof is compliant; not established by sources.",
+        "INCOMPLETE": "Would require a demonstrated violation and grounded finding/remediation/verification, not merely failure to prove COMPLETE.",
+        "NOT_APPLICABLE": "Not an uncertainty status; forbidden for an authorized deletion request."
+      }
+    },
+    {
+      "case_id": "case_506",
+      "audit_at": "2026-02-08T07:00:00+00:00",
+      "deletion_authorized": true,
+      "strict_status": null,
+      "kind": "UNRESOLVED_VERDICT",
+      "issues": [
+        {
+          "code": "PRIMARY_PROFILE_VERIFICATION_UNGROUNDED",
+          "detail": "Known retained/downstream resources do not prove the account's required final state"
+        }
+      ],
+      "assumption_applied": false,
+      "rejected_forced_format_options": {
+        "COMPLETE": "Would assume missing/conflicting required final-state proof is compliant; not established by sources.",
+        "INCOMPLETE": "Would require a demonstrated violation and grounded finding/remediation/verification, not merely failure to prove COMPLETE.",
+        "NOT_APPLICABLE": "Not an uncertainty status; forbidden for an authorized deletion request."
+      }
+    },
+    {
+      "case_id": "case_512",
+      "audit_at": "2026-02-08T07:00:00+00:00",
+      "deletion_authorized": true,
+      "strict_status": null,
+      "kind": "UNRESOLVED_VERDICT",
+      "issues": [
+        {
+          "code": "PRIMARY_PROFILE_VERIFICATION_UNGROUNDED",
+          "detail": "Known retained/downstream resources do not prove the account's required final state"
+        }
+      ],
+      "assumption_applied": false,
+      "rejected_forced_format_options": {
+        "COMPLETE": "Would assume missing/conflicting required final-state proof is compliant; not established by sources.",
+        "INCOMPLETE": "Would require a demonstrated violation and grounded finding/remediation/verification, not merely failure to prove COMPLETE.",
+        "NOT_APPLICABLE": "Not an uncertainty status; forbidden for an authorized deletion request."
+      }
+    },
+    {
+      "case_id": "case_524",
+      "audit_at": "2026-01-29T12:00:00+00:00",
+      "deletion_authorized": true,
+      "strict_status": null,
+      "kind": "UNRESOLVED_VERDICT",
+      "issues": [
+        {
+          "code": "PRIMARY_PROFILE_VERIFICATION_UNGROUNDED",
+          "detail": "Known retained/downstream resources do not prove the account's required final state"
+        }
+      ],
+      "assumption_applied": false,
+      "rejected_forced_format_options": {
+        "COMPLETE": "Would assume missing/conflicting required final-state proof is compliant; not established by sources.",
+        "INCOMPLETE": "Would require a demonstrated violation and grounded finding/remediation/verification, not merely failure to prove COMPLETE.",
+        "NOT_APPLICABLE": "Not an uncertainty status; forbidden for an authorized deletion request."
+      }
+    },
+    {
+      "case_id": "case_530",
+      "audit_at": "2026-01-29T12:00:00+00:00",
+      "deletion_authorized": true,
+      "strict_status": null,
+      "kind": "UNRESOLVED_VERDICT",
+      "issues": [
+        {
+          "code": "PRIMARY_PROFILE_VERIFICATION_UNGROUNDED",
+          "detail": "Known retained/downstream resources do not prove the account's required final state"
+        }
+      ],
+      "assumption_applied": false,
+      "rejected_forced_format_options": {
+        "COMPLETE": "Would assume missing/conflicting required final-state proof is compliant; not established by sources.",
+        "INCOMPLETE": "Would require a demonstrated violation and grounded finding/remediation/verification, not merely failure to prove COMPLETE.",
+        "NOT_APPLICABLE": "Not an uncertainty status; forbidden for an authorized deletion request."
+      }
+    },
+    {
+      "case_id": "case_532",
+      "audit_at": "2026-01-29T12:00:00+00:00",
+      "deletion_authorized": true,
+      "strict_status": null,
+      "kind": "UNRESOLVED_VERDICT",
+      "issues": [
+        {
+          "code": "PRIMARY_PROFILE_VERIFICATION_UNGROUNDED",
+          "detail": "Known retained/downstream resources do not prove the account's required final state"
+        }
+      ],
+      "assumption_applied": false,
+      "rejected_forced_format_options": {
+        "COMPLETE": "Would assume missing/conflicting required final-state proof is compliant; not established by sources.",
+        "INCOMPLETE": "Would require a demonstrated violation and grounded finding/remediation/verification, not merely failure to prove COMPLETE.",
+        "NOT_APPLICABLE": "Not an uncertainty status; forbidden for an authorized deletion request."
+      }
+    },
+    {
+      "case_id": "case_55",
+      "audit_at": "2026-04-30T11:00:00+00:00",
+      "deletion_authorized": true,
+      "strict_status": null,
+      "kind": "UNRESOLVED_VERDICT",
+      "issues": [
+        {
+          "code": "NO_DIRECT_STATE",
+          "system_id": "backup_service",
+          "resource_id": "backup_9287"
+        }
+      ],
+      "assumption_applied": false,
+      "rejected_forced_format_options": {
+        "COMPLETE": "Would assume missing/conflicting required final-state proof is compliant; not established by sources.",
+        "INCOMPLETE": "Would require a demonstrated violation and grounded finding/remediation/verification, not merely failure to prove COMPLETE.",
+        "NOT_APPLICABLE": "Not an uncertainty status; forbidden for an authorized deletion request."
+      }
+    },
+    {
+      "case_id": "case_63",
+      "audit_at": "2026-09-17T09:20:00+00:00",
+      "deletion_authorized": true,
+      "strict_status": null,
+      "kind": "UNRESOLVED_VERDICT",
+      "issues": [
+        {
+          "code": "OCR_SUBJECT_LINK_UNCORROBORATED",
+          "resource_id": "marketing_001"
+        }
+      ],
+      "assumption_applied": false,
+      "rejected_forced_format_options": {
+        "COMPLETE": "Would assume missing/conflicting required final-state proof is compliant; not established by sources.",
+        "INCOMPLETE": "Would require a demonstrated violation and grounded finding/remediation/verification, not merely failure to prove COMPLETE.",
+        "NOT_APPLICABLE": "Not an uncertainty status; forbidden for an authorized deletion request."
+      }
+    }
+  ],
+  "grounding_assessment": {
+    "source": "Deterministic sufficiency checks, not hidden-label correctness",
+    "grounded_verdict_count": 510,
+    "complete_proof_plan_count": 509,
+    "eligible": false
+  },
+  "strict_contract_validation": {
+    "valid": false,
+    "row_count": 518,
+    "issues": [
+      {
+        "code": "STATUS",
+        "message": "Illegal deletion_status",
+        "case_id": "case_46",
+        "row_no": 375,
+        "step_no": null
+      },
+      {
+        "code": "STATUS",
+        "message": "Illegal deletion_status",
+        "case_id": "case_506",
+        "row_no": 426,
+        "step_no": null
+      },
+      {
+        "code": "STATUS",
+        "message": "Illegal deletion_status",
+        "case_id": "case_512",
+        "row_no": 433,
+        "step_no": null
+      },
+      {
+        "code": "STATUS",
+        "message": "Illegal deletion_status",
+        "case_id": "case_524",
+        "row_no": 446,
+        "step_no": null
+      },
+      {
+        "code": "STATUS",
+        "message": "Illegal deletion_status",
+        "case_id": "case_530",
+        "row_no": 453,
+        "step_no": null
+      },
+      {
+        "code": "STATUS",
+        "message": "Illegal deletion_status",
+        "case_id": "case_532",
+        "row_no": 455,
+        "step_no": null
+      },
+      {
+        "code": "STATUS",
+        "message": "Illegal deletion_status",
+        "case_id": "case_55",
+        "row_no": 474,
+        "step_no": null
+      },
+      {
+        "code": "STATUS",
+        "message": "Illegal deletion_status",
+        "case_id": "case_63",
+        "row_no": 483,
+        "step_no": null
+      }
+    ]
+  }
+}

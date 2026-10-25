@@ -5,6 +5,39 @@ import json
 from pathlib import Path
 import tempfile
 
+
+def publish_best_effort(report, dataset: Path, destination: Path):
+    """Explicit format-only publication, never a strict certification.
+
+    Only the evidence-required/nonempty COMPLETE check may remain unsatisfied,
+    and only for rows already disclosed as assumption-based in this fresh run.
+    All other schema, ordering, operation and citation checks must still pass.
+    """
+    source = Path(report["candidate_output"])
+    if destination.suffix.lower() != ".csv":
+        raise InputError("Best-effort publication must be a CSV")
+    protect_output(destination, dataset, source, Path(report["strict_output"]))
+    if not report["candidate_generated"] or hashlib.sha256(source.read_bytes()).hexdigest() != report["candidate_sha256"]:
+        raise InputError("Candidate missing or hash mismatch")
+    checked = validate(source, load_requests(dataset, "full"), load_evidence(dataset)).report()
+    assumed = {r["case_id"] for r in report.get("candidate_assumptions", []) if not r["evidence_established"]}
+    allowed = lambda i: (i["code"] == "STATUS_SHAPE" and i["case_id"] in assumed and
+                         i["message"] == "COMPLETE requires evidence-backed verification")
+    if any(not allowed(i) for i in checked["issues"]):
+        raise InputError("Best-effort publication failed independent format/citation checks")
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(dir=destination.parent, delete=False) as stream:
+        temporary = Path(stream.name); stream.write(source.read_bytes())
+    try:
+        temporary.replace(destination)
+    finally:
+        temporary.unlink(missing_ok=True)
+    report["publication"] = {"path": str(destination), "role": "EXPERIMENTAL_BEST_EFFORT",
+        "format_valid": True, "strict_contract_valid": checked["valid"], "evidence_validated": False,
+        "strict_failures": checked["issues"], "assumption_case_ids": sorted(assumed),
+        "sha256": hashlib.sha256(destination.read_bytes()).hexdigest()}
+    return report["publication"]
+
 from .authorization import authorize
 from .contract import validate
 from .inputs import InputError, load_evidence, load_requests, protect_output
@@ -12,7 +45,7 @@ from .solver import solve
 
 
 def prepare(dataset: Path, strict_output: Path, candidate_output: Path,
-            extractions: Path | None = None, *, candidate_policy: str = "strict") -> dict:
+            extractions: Path | None = None, *, candidate_policy: str = "strict", ai=None) -> dict:
     if candidate_policy not in {"strict", "observed-scope"}:
         raise InputError("Unsupported candidate policy")
     if candidate_policy != "strict" and candidate_output.name == "output.csv":
@@ -22,7 +55,8 @@ def prepare(dataset: Path, strict_output: Path, candidate_output: Path,
         if extractions and output.resolve().is_relative_to(extractions.resolve()):
             raise InputError("Candidate outputs must not overwrite extraction caches")
     # Always recompute: never certify an unrelated/stale CSV using a trusted-looking report.
-    run = solve(dataset, "full", strict_output, extractions)
+    run = (solve(dataset, "full", strict_output, extractions, ai=ai) if ai is not None else
+           solve(dataset, "full", strict_output, extractions))
     requests = load_requests(dataset, "full")
     validation = validate(strict_output, requests, load_evidence(dataset)).report()
     reference_codes = {"EVIDENCE_ID", "FUTURE_EVIDENCE"}
