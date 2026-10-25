@@ -10,9 +10,17 @@ def package(destination: Path):
     destination = destination.resolve()
     if not destination.is_relative_to((ROOT / "artifacts").resolve()) or destination.suffix != ".zip":
         raise ValueError("Package destination must be a ZIP under artifacts/")
+    EXCLUDED_NAMES = {
+        "senior_ai_score_audit.md",
+        "agent_native_gap_analysis.md",
+        "agent_led_experiment.md",
+        "agent_led_execution_report.md",
+        "final_submission_audit.md",
+    }
     roots = [ROOT / p for p in ("code", "tests", "docs")]
     files = [p for folder in roots for p in folder.rglob("*")
-             if p.is_file() and p.suffix in {".py", ".md", ".ps1"} and "__pycache__" not in p.parts]
+             if p.is_file() and p.suffix in {".py", ".md", ".ps1"}
+             and "__pycache__" not in p.parts and p.name not in EXCLUDED_NAMES]
     files += [ROOT / p for p in ("README.md", "COMMANDS.md", "AGENTS.md", "problem_statement.md",
               "agent_trace_instructions.md", "Makefile", "requirements.txt", "requirements-dev.txt",
               ".env.example") if (ROOT / p).is_file()]

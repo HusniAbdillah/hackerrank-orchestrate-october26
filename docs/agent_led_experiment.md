@@ -141,3 +141,11 @@ iteration's initial snapshot. All 103 original dataset hashes remain unchanged.
 Current working suite: 352 passed. Certificate, blind-context, no-baseline-authority,
 partial-plan, false-COMPLETE, source-time, source-span, negative-scope and publication-block
 regressions are included. Final fresh-package results are recorded in artifacts/agent_led/verification.json.
+
+
+Final artifact check also detected a later change to artifacts/code.zip after the earlier
+matching-hash check. Attribution is not established; our packaging commands targeted only
+artifacts/agent_led/code_agent_led.zip. The original frozen/artifacts/code.zip and latest
+observed_code.zip are both preserved. Treat verification.json as the final drift record;
+do not describe the live archive as byte-identical to the initial snapshot. Both observed
+archives pass CRC and contain the required README/code/evaluation paths.

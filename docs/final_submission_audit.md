@@ -22,9 +22,9 @@ Verdict: **GO-WITH-DISCLOSED-RISK**
 
 | Artifact | Full Path | Size | SHA-256 |
 |---|---|---|---|
-| **`code.zip`** | `D:\Hackathon\hackerrank-orchestrate-october26\artifacts\code.zip` | 336,319 bytes (328.44 KB) | `05fc189d3adacf269397fdc31cdd685ad975327ebfe6fbf5d62fd6669bfd55b3` |
+| **`code.zip`** | `D:\Hackathon\hackerrank-orchestrate-october26\artifacts\code.zip` | 317,135 bytes (309.70 KB) | `e31c6f7b0d8f14b6957110ef36dd1dc45bad13a88ea1f6b8dd3c785043893c02` |
 | **`output.csv`** | `D:\Hackathon\hackerrank-orchestrate-october26\output.csv` | 536,579 bytes (524.00 KB) | `4263f02a16d30b525c0cc9ff4fb9ee62657ebcb26d8aec65475cef8287b88aab` |
-| **`log.txt`** | `D:\Hackathon\hackerrank-orchestrate-october26\log.txt` | 200,293 bytes (195.60 KB) | `81aab1a12601e37c15b4974bc0f8d9558b38f3e39b9941e81a7b131d3da3a452` |
+| **`log.txt`** | `D:\Hackathon\hackerrank-orchestrate-october26\log.txt` | 223,674 bytes (218.43 KB) | `98b96d71ba2cbd303ee6c8139c0e039f1984dc7ad8ca3283b8c769f25c16bc74` |
 
 ---
 
@@ -149,9 +149,9 @@ Evaluated against `dataset/sample_output.csv` (32 cases) without reference leaka
 
 ## M. Final HackerRank Upload Checklist
 
-1. [x] **`code.zip`**: Upload [`artifacts/code.zip`](file:///d:/Hackathon/hackerrank-orchestrate-october26/artifacts/code.zip) (328.44 KB, SHA-256 `05fc189d3adacf269397fdc31cdd685ad975327ebfe6fbf5d62fd6669bfd55b3`).
+1. [x] **`code.zip`**: Upload [`artifacts/code.zip`](file:///d:/Hackathon/hackerrank-orchestrate-october26/artifacts/code.zip) (309.70 KB, SHA-256 `e31c6f7b0d8f14b6957110ef36dd1dc45bad13a88ea1f6b8dd3c785043893c02`).
 2. [x] **`output.csv`**: Upload [`output.csv`](file:///d:/Hackathon/hackerrank-orchestrate-october26/output.csv) (524.00 KB, SHA-256 `4263f02a16d30b525c0cc9ff4fb9ee62657ebcb26d8aec65475cef8287b88aab`).
-3. [x] **`chat_transcript`**: Upload [`log.txt`](file:///d:/Hackathon/hackerrank-orchestrate-october26/log.txt) (195.60 KB, SHA-256 `81aab1a12601e37c15b4974bc0f8d9558b38f3e39b9941e81a7b131d3da3a452`).
+3. [x] **`chat_transcript`**: Upload [`log.txt`](file:///d:/Hackathon/hackerrank-orchestrate-october26/log.txt) (218.43 KB, SHA-256 `98b96d71ba2cbd303ee6c8139c0e039f1984dc7ad8ca3283b8c769f25c16bc74`).
 
 **Upload Portal Link:**
 https://wwww.hackerrank.com/contests/hackerrank-orchestrate-october26/challenges/ghost-data-still-exists
