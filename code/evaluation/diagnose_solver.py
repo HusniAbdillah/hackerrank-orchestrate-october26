@@ -11,11 +11,38 @@ from deletion_audit.identity import IdentityGraph
 from deletion_audit.ingestion import ingest
 from deletion_audit.inputs import load_evidence, load_requests, protect_output
 from deletion_audit.solver import enrich
+from deletion_audit.contract import validate, STEP_FIELDS
+
+
+def field_breakdown(predictions, reference, requests, evidence):
+    """Evaluation-only anchored field/position errors, separate from root causes."""
+    actual = {r.case_id: r for r in validate(predictions, requests, evidence).rows}
+    expected = {r.case_id: r for r in validate(reference, requests, evidence).rows}
+    result = {}
+    for cid, truth in expected.items():
+        row = actual.get(cid)
+        given = row.steps or [] if row else []
+        anchor = lambda s: (s.get("phase"), s.get("system_id"), s.get("resource_id"))
+        by_anchor = {}
+        for step in given:
+            if isinstance(step, dict): by_anchor.setdefault(anchor(step), []).append(step)
+        mismatches = []
+        for step in truth.steps:
+            matches = by_anchor.get(anchor(step), [])
+            if matches:
+                paired = matches.pop(0)
+                for key in STEP_FIELDS:
+                    if paired.get(key) != step[key]:
+                        mismatches.append({"anchor": list(anchor(step)), "field": key,
+                                           "expected": step[key], "actual": paired.get(key)})
+        result[cid] = mismatches
+    return result
 
 
 def diagnose(dataset, predictions, run, extractions=None):
     requests = load_requests(dataset, "sample")
     measured = evaluate(predictions, dataset / "sample_output.csv", requests, load_evidence(dataset))
+    fields = field_breakdown(predictions, dataset / "sample_output.csv", requests, load_evidence(dataset))
     store = ingest(dataset); enrich(store)
     if extractions:
         from deletion_audit.extractions import apply_cached_screens
@@ -55,7 +82,15 @@ def diagnose(dataset, predictions, run, extractions=None):
             aggregate["insufficient_evidence_abstention"] += 1
         case["missing_step_causes"] = reasons
         case["solver_issues"] = diagnostics[case["case_id"]]["issues"]
+        case["anchored_field_mismatches"] = fields[case["case_id"]]
     measured["root_cause_counts"] = dict(aggregate.most_common())
+    measured["exact_failure_case_contributions"] = dict(Counter(
+        cause for case in measured["cases"] if not case["exact_case"]
+        for cause in ({r["root_cause"] for r in case["missing_step_causes"]} |
+                      ({"additional_grounded_resource_outside_reference_scope"} if case["extra_steps"] else set()) |
+                      ({"status_mismatch"} if not case["status_correct"] else set()))))
+    measured["anchored_field_error_counts"] = dict(Counter(
+        error["field"] for case in measured["cases"] for error in case["anchored_field_mismatches"]))
     measured["root_cause_caveat"] = "Reference discrepancies are diagnostic, not proof the solver should bypass cutoff or invent links. Only supplied validated extraction caches are applied."
     return measured
 
