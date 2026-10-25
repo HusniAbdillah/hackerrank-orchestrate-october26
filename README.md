@@ -1,5 +1,15 @@
 # HackerRank Orchestrate - October 2026
 
+Latest final commands/results: [docs/final_submission_sprint.md](docs/final_submission_sprint.md).
+305 tests pass; strict coverage remains 510/518. The opt-in observed-scope candidate
+contains 518 rows but only 516 pass contract validation; eight verdicts are assumed,
+not evidence-proven. Root output.csv remains withheld. Regenerate native OCR on
+Windows for measured results; local caches and credentials are not bundled.
+
+The single optional investigator now supports five read-only tools, including bounded `inspect_source`, exact identity/foreign-key proposals and source-validated JSON/visible field extraction. Default model/tool budgets are unchanged. See [docs/agent_capabilities.md](docs/agent_capabilities.md) for proof constraints, tests and the distinction between offline capability and measured sample accuracy. No live accuracy gain is claimed.
+
+Final recovery: `make prepare-candidate` checks whether a separate submission candidate can be published. It preserves strict uncertainty and never fills unknown statuses. Current result is blocked on eight verdicts and one conditional plan gap. See [docs/submission_recovery.md](docs/submission_recovery.md) for exact commands, upload filenames and official schedule verification.
+
 ## Ghost Data Still Exists
 
 Build an AI agent that audits whether a user's personal data was actually deleted.
@@ -9,6 +19,17 @@ A deletion workflow may report **Complete** while data still exists in databases
 For each request, the agent must first determine whether deletion was actually requested. It then returns `COMPLETE`, `INCOMPLETE`, or `NOT_APPLICABLE`, reports any remaining data or recreation risk, and produces the ordered remediation and verification steps required to finish an authorized deletion safely.
 
 Read [`problem_statement.md`](./problem_statement.md) for the complete challenge contract.
+
+## Quick Command Automation (`Makefile`)
+
+All Python pipeline commands, tests, preprocessing steps, evaluations, and packaging routines are fully automated via `Makefile`. For the complete reference of all commands, options, and maintenance policies, see [`COMMANDS.md`](./COMMANDS.md).
+
+```bash
+make help               # Display formatted list of all available commands
+make test               # Run the full unit and regression suite
+make workflow-sample    # Run complete sample loop: ocr -> solve -> eval -> diagnose
+make workflow-full      # Run production loop: ocr -> solve -> validate -> package
+```
 
 ## Runnable deterministic audit baseline
 
@@ -47,7 +68,7 @@ per-case discrepancies, and the next accuracy priorities. No dataset file is mod
 ## Optional live Audit Investigator
 
 Gemini and DeepSeek integrations use their documented HTTPS APIs, with no agent framework.
-The agent can call four read-only tools; deterministic checks retain control of identity,
+The agent can call five read-only tools; deterministic checks retain control of identity,
 evidence admissibility, policy, verdicts and CSV ordering. Live text/tool investigations
 succeeded with both providers, and Gemini image extraction succeeded. **No incremental
 sample accuracy gain from AI was measured** in this iteration; unsupported proposals were rejected.
@@ -290,3 +311,7 @@ Before submitting, confirm that:
 - `code.zip` includes your runnable code, `README.md`, `code/evaluation/evaluation_report.md`, and `code/evaluation/usage_report.md`;
 - `log.txt` follows the `AGENTS.md` turn format and is uploaded to the `chat_transcript` slot; and
 - no API keys, credentials, real personal data, or sensitive configuration values are included.
+
+### Latest bounded agent correction pilot
+
+See [docs/agent_corrections_readiness.md](docs/agent_corrections_readiness.md) for exact commands, real traces and cost. Pagination and one bounded grounding correction are implemented; same-ID vision enrichments reach a case-local solver copy. `--ai-case-id` explicitly investigates selected cases even if the deterministic decision is sufficient; it still requires grounded resource candidates and does not change evidence validation. Seven successful live calls yielded zero new facts or accuracy gain, so further paid experimentation was stopped. Full validity remains 510/518; `output.csv` is not published.

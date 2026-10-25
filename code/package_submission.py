@@ -13,7 +13,9 @@ def package(destination: Path):
     roots = [ROOT / p for p in ("code", "tests", "docs")]
     files = [p for folder in roots for p in folder.rglob("*")
              if p.is_file() and p.suffix in {".py", ".md", ".ps1"} and "__pycache__" not in p.parts]
-    files += [ROOT / p for p in ("README.md", "requirements.txt", "requirements-dev.txt", ".env.example")]
+    files += [ROOT / p for p in ("README.md", "COMMANDS.md", "AGENTS.md", "problem_statement.md",
+              "agent_trace_instructions.md", "Makefile", "requirements.txt", "requirements-dev.txt",
+              ".env.example") if (ROOT / p).is_file()]
     destination.parent.mkdir(parents=True, exist_ok=True)
     with ZipFile(destination, "w", ZIP_DEFLATED) as archive:
         for path in sorted(set(files)):
