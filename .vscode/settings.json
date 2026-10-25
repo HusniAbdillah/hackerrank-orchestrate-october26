@@ -1,0 +1,16 @@
+{
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/code",
+    "${workspaceFolder}/tests"
+  ],
+  "python.autoComplete.extraPaths": [
+    "${workspaceFolder}/code",
+    "${workspaceFolder}/tests"
+  ],
+  "python.testing.pytestArgs": [
+    "tests"
+  ],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true
+}
+

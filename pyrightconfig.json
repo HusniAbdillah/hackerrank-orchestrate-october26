@@ -1,0 +1,11 @@
+{
+  "include": [
+    "code",
+    "tests"
+  ],
+  "extraPaths": [
+    "code",
+    "tests"
+  ]
+}
+
