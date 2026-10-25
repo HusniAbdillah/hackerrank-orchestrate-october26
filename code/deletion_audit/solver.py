@@ -54,6 +54,9 @@ def enrich(store):
                                  identifiers=identifiers({"text": text})))
     store.add(extra)
 
+    from .artifact_links import enrich_artifacts
+    enrich_artifacts(store)
+
 
 def scope_negatives(store, keys, at):
     """Project an exhaustive captured collection onto an already grounded resource ID."""
@@ -64,6 +67,13 @@ def scope_negatives(store, keys, at):
             continue
         table = obs.scope.get("table")
         if table and table != "snapshot_scope" and obs.kind != "missing_data":
+            # A heterogeneous SQL export proves its rows, not an exhaustive
+            # inventory of every origin service. Require declared service scope
+            # before projecting other resources absent from that mixed table.
+            if "decoded_record" in obs.fields and not any(
+                row.get("origin_system") == obs.system_id for row in obs.scope.get("snapshot_scope", [])
+            ):
+                continue
             category = obs.category or COLLECTIONS.get(obs.collection, (None, None))[1]
             key = (obs.file_id, obs.system_id, obs.collection, table)
             entry = scopes.setdefault(key, {"source": obs, "category": category, "resources": set()})
@@ -84,6 +94,39 @@ def scope_negatives(store, keys, at):
                                      identifiers=(), scope={**source.scope, "grounded_resource": resource,
                                                             "projected_negative": True}))
     return extra
+
+
+def profile_scope_proofs(store, at, graph=None, user=None):
+    """A declared empty account snapshot needs no invented per-user resource ID.
+
+    This covers only the explicitly captured primary service. Known independent
+    replicas and active flows still participate in reconstruction and policy.
+    """
+    proofs = [o for o in store.observations if o.admissible(at)
+            and o.kind == "scoped_negative" and o.resource_id is None
+            and o.category == "USER_PROFILE" and o.system_id == "account_service"
+            and o.scope.get("complete_collection") is True
+            and any(row.get("origin_system") == "account_service"
+                    for row in o.scope.get("snapshot_scope", []))]
+    if graph is not None and user is not None:
+        inventories = {}
+        for observation in store.observations:
+            if (observation.admissible(at) and observation.category == "USER_PROFILE"
+                and observation.resource_id and observation.scope.get("table") == "customer_profiles"
+                and any(r.get("origin_system") == "account_service" for r in observation.scope.get("snapshot_scope", []))):
+                inventories.setdefault((observation.file_id, observation.observed_at), []).append(observation)
+        for rows in inventories.values():
+            # Every row in the declared primary inventory must have a unique exact
+            # subject binding to someone else. Anonymous/ambiguous rows cannot certify
+            # absence, and no resource ID is synthesized for the missing subject.
+            owners = [{uid for kind, value in row.identifiers for uid in graph.resolve(kind, value, at)} for row in rows]
+            if all(len(subjects) == 1 and user not in subjects for subjects in owners):
+                source = rows[0]
+                proofs.append(replace(source, observation_id=source.observation_id + ":subject_scope",
+                    resource_id=None, kind="scoped_negative", fields={"predicate": "all captured profile rows belong exactly to other subjects"},
+                    scope={**source.scope, "examined_observations": [r.observation_id for r in rows],
+                           "excluded_subject": user, "scope_proof": "declared_inventory_exact_subject_filter"}))
+    return proofs
 
 
 def audit(request, store, graph, policy):
@@ -148,8 +191,13 @@ def audit(request, store, graph, policy):
                                    Decision(policy.rules["USER_PROFILE"]["rule_id"], None, None, "VERIFY_RECORD_ABSENT")))
                     known_states.add(key)
     status, steps = plan([r for r, d in usable], [d for r, d in usable])
+    scope_proofs = profile_scope_proofs(store, request.audit_at, graph, user)
+    diagnostic["scope_proofs"] = [{"observation_id": o.observation_id, "evidence_id": o.source_id,
+                                  "observed_at": o.observed_at.isoformat(), "scope": o.scope,
+                                  "limitation": "Declared primary service only; does not clear independent replicas"}
+                                 for o in scope_proofs]
     if status == "COMPLETE" and not any(r.category in {"USER_PROFILE", "ACCOUNT_TOMBSTONE"}
-                                        for r, _ in usable):
+                                        for r, _ in usable) and not scope_proofs:
         diagnostic["issues"].append({"code": "PRIMARY_PROFILE_VERIFICATION_UNGROUNDED",
                                       "detail": "Known retained/downstream resources do not prove the account's required final state"})
     diagnostic["resource_states"] = [{"system_id": r.system_id, "resource_id": r.resource_id,
@@ -185,7 +233,7 @@ def decide_case(request, store, graph, policy) -> AuditDecision:
 
 
 def solve(dataset: Path, split: str, output: Path, extractions: Path | None = None,
-          submission_output: Path | None = None) -> dict:
+          submission_output: Path | None = None, ai=None) -> dict:
     protect_output(output, dataset)
     if extractions and output.resolve().is_relative_to(extractions.resolve()):
         raise InputError("Prediction output must not overwrite the extraction cache")
@@ -208,6 +256,18 @@ def solve(dataset: Path, split: str, output: Path, extractions: Path | None = No
     rows, cases = [], []
     for cid, request in sorted(requests.items()):
         decision = decide_case(request, store, graph, policy)
+        if ai is not None:
+            from .investigator import AuditTools
+            accepted = ai.investigate(AuditTools(request, store, graph, policy), decision.diagnostic)
+            if accepted:
+                from .observations import EvidenceStore
+                local = EvidenceStore(files=store.files, issues=store.issues, source_text=store.source_text)
+                local.add(store.observations)
+                local.add(accepted)
+                updated = decide_case(request, local, graph, policy)
+                updated.diagnostic["baseline_status"] = decision.status
+                updated.diagnostic["accepted_ai_observations"] = [o.observation_id for o in accepted]
+                decision = updated
         rows.append({"case_id": cid, "deletion_status": decision.status or "", "steps_json": json.dumps(decision.steps, separators=(",", ":"))})
         cases.append(decision.diagnostic)
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -256,6 +316,8 @@ def solve(dataset: Path, split: str, output: Path, extractions: Path | None = No
             "typed_readback_adapters": [{"original_observation": o.observation_id.rsplit(":typed", 1)[0],
                                          "category": o.category, "basis": "correlated legacy_contact_index source"}
                                         for o in store.observations if o.observation_id.endswith(":typed")],
-            "model_usage": {"calls": 0, "input_tokens": 0, "output_tokens": 0, "estimated_cost_usd": 0},
+            "ai_investigations": ai.events if ai is not None else [],
+            "model_usage": ai.ledger.summary() if ai is not None else {"calls": 0, "input_tokens": 0, "output_tokens": 0, "estimated_cost_usd": 0},
+            "model_call_records": ai.ledger.records if ai is not None else [],
             "runtime_seconds": perf_counter() - start,
             "dataset_integrity": {"unchanged": before == after, "file_count": len(after)}}

@@ -104,4 +104,6 @@ def apply_cached_screens(store, directory: Path) -> list[dict]:
         store.add(observed)
         report.update(status="structured" if any(o.kind == "direct" for o in observed) else "text_only",
                       derived_observations=[o.observation_id for o in observed if o.kind == "direct"])
+    from .artifact_links import enrich_artifacts
+    enrich_artifacts(store)
     return reports

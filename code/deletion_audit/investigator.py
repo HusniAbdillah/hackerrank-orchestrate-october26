@@ -3,6 +3,7 @@
 No model client, arbitrary file access, execution tool, or decision-writing capability.
 """
 from copy import deepcopy
+import re
 from dataclasses import dataclass
 from typing import Protocol, Any
 
@@ -25,7 +26,7 @@ def _schema(properties, required):
 
 TOOL_SCHEMAS = [
     {"name": "search_evidence", "read_only": True, "parameters": _schema({
-        "kind": {"type": "string", "enum": ["user_id", "email", "email_hash", "phone", "resource", "file_id"]},
+        "kind": {"type": "string", "enum": ["user_id", "email", "email_hash", "phone", "resource", "file_id", "asset_reference"]},
         "value": {"type": "string", "minLength": 1, "maxLength": 512},
         "system_id": {"type": "string"}, "limit": {"type": "integer", "minimum": 1, "maximum": 100}}, ["kind", "value"])},
     {"name": "trace_identity", "read_only": True, "parameters": _schema({}, [])},
@@ -60,7 +61,12 @@ class AuditTools:
         self._limit(limit)
         if not isinstance(value, str) or not value or len(value) > 512:
             raise InputError("Exact search value required (maximum 512 characters)")
-        if kind == "file_id":
+        if kind == "asset_reference":
+            if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_. -]{0,150}\.(?:pdf|png|zip|json|csv|zst)", value):
+                raise InputError("Asset reference must be a literal supported filename")
+            values = [o for o in self.store.observations if o.collection in {"ocr_text", "pdf_text"}
+                      and re.search(r"(?<![\w])" + re.escape(value) + r"(?![\w])", o.fields.get("text", ""))]
+        elif kind == "file_id":
             values = [o for o in self.store.observations if o.file_id == value]
         elif kind == "resource":
             if not system_id:

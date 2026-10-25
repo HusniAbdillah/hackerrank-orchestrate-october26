@@ -26,6 +26,14 @@ def main(argv=None) -> int:
             command.add_argument("--output", type=Path, required=True)
             command.add_argument("--extractions", type=Path, help="Optional SHA-256-bound local OCR cache")
             command.add_argument("--submission-output", type=Path, help="Publish only when all full-split verdicts, proof scopes and contract checks pass")
+            command.add_argument("--ai", choices=("none", "deepseek", "gemini", "auto"), default="none")
+            command.add_argument("--ai-cache", type=Path, default=ROOT / "artifacts/ai_cache")
+            command.add_argument("--max-ai-cases", type=int, default=32)
+            command.add_argument("--max-model-calls", type=int, default=96)
+            command.add_argument("--max-cost-usd", type=float, default=1.0)
+            command.add_argument("--ai-case-id", action="append", default=[], help="Optional explicit pilot selection; all request rows still generated")
+            command.add_argument("--vision", action="store_true", help="Permit Gemini vision only for flagged OCR ambiguity")
+            command.add_argument("--ai-case-seconds", type=float, default=90)
         if name == "ocr":
             command.add_argument("--output", type=Path, required=True, help="Extraction cache directory outside dataset/")
         if name == "ingest":
@@ -51,7 +59,15 @@ def main(argv=None) -> int:
                 if args.submission_output:
                     protect_output(args.report, args.dataset, args.submission_output)
             from .solver import solve
-            report = solve(args.dataset, args.split, args.output, args.extractions, args.submission_output)
+            ai = None
+            if args.ai != "none":
+                from .ai_auditor import AuditInvestigator
+                if any(p.resolve().is_relative_to(args.ai_cache.resolve()) for p in [args.output, args.report, args.submission_output] if p):
+                    raise InputError("Outputs must not overwrite the investigator cache")
+                ai = AuditInvestigator(args.dataset, args.ai, cache=args.ai_cache,
+                    max_cases=args.max_ai_cases, max_calls=args.max_model_calls, max_cost_usd=args.max_cost_usd,
+                    allow_vision=args.vision, case_ids=args.ai_case_id, case_seconds=args.ai_case_seconds)
+            report = solve(args.dataset, args.split, args.output, args.extractions, args.submission_output, ai=ai)
             exit_code = 0 if report["validation"]["valid"] and report["dataset_integrity"]["unchanged"] else 1
         elif args.command == "ingest":
             outputs = [p for p in (args.report, args.normalized, args.identity_report) if p]

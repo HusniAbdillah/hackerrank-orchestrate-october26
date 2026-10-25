@@ -4,7 +4,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime
 
-from .observations import Observation
+from .observations import Observation, identifiers
 
 
 def actual_fields(obs: Observation) -> dict:
@@ -38,6 +38,12 @@ def exposed(fields: dict, *, anonymize=False) -> bool | None:
         return True
     if fields.get("message_text") == "[REDACTED]":
         return False
+    # Conversation exports can embed literal contact details in the message body
+    # while omitting requester_email/phone columns. Missing columns are not proof
+    # of redaction. Stable subject references outside this text remain permitted.
+    if any(kind in {"email", "phone", "email_hash"}
+           for kind, _ in identifiers({"text": fields.get("message_text", "")})):
+        return True
     if fields.get("matched_value") not in (None, "", "null"):
         return True
     if present:
