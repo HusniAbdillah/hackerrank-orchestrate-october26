@@ -26,12 +26,17 @@ python code/main.py solve --split full --output artifacts/full_predictions.csv -
 
 The sample run writes all 32 rows, with 75% measured status accuracy and 85.546%
 step F1. Eight cases lack sufficient proof (three have no grounded resource link). They are explicitly
-abstained as `INCOMPLETE` with empty steps because the contract has no UNKNOWN value;
+unresolved with a null internal verdict and blank diagnostic CSV status;
 these eight rows deliberately fail validation. `solve` and `evaluate` therefore return
 exit code 1 while still writing their artifacts. Exit 2 means fatal input/configuration
 failure. The current outputs are diagnostic predictions, **not submission-ready**.
 Full processing writes 518 rows; evidence gaps still block fully valid submission output.
-See [docs/audit_solver.md](docs/audit_solver.md) for measured results, exact limitations,
+Full-run contract-valid coverage is now 413/518 after optional local OCR (105 unresolved).
+Use `python code/main.py ocr --output artifacts/ocr_cache` on Windows, then add
+`--extractions artifacts/ocr_cache` to solve commands. `--submission-output output.csv`
+publishes only when all verdicts, proof scopes, validation and integrity checks pass.
+
+See [docs/submission_readiness.md](docs/submission_readiness.md) for current results, exact limitations,
 per-case discrepancies, and the next accuracy priorities. No dataset file is modified.
 
 Use Python 3.11+. Evaluation/readiness uses the standard library; PDF ingestion additionally
