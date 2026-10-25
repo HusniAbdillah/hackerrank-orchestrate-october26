@@ -282,7 +282,10 @@ def test_vision_original_image_request_and_validated_cache(tmp_path, monkeypatch
                 "usageMetadata": {"promptTokenCount": 10, "candidatesTokenCount": 20}}
     agent = AuditInvestigator(dataset, "gemini", cache=tmp_path / "cache")
     agent.providers["gemini"] = Provider(ProviderConfig("gemini", "gemini-3.5-flash-lite", "unit-test"), agent.ledger, transport)
-    assert agent.vision(tools, source.file_id) == []  # corroboration does not invent new state
+    updates = agent.vision(tools, source.file_id)
+    assert len(updates) == 1 and updates[0].observation_id == source.observation_id
+    assert updates[0].scope["vision_corroborated"]  # metadata reaches the case-local solver copy
+    assert agent.events[-1]["accepted"][0]["enrichment"] and not agent.events[-1]["accepted"][0]["new_fact"]
     assert agent.events[-1]["status"] == "LIVE_COMPLETED" and agent.events[-1]["accepted"]
     agent.vision(tools, source.file_id)
     assert agent.events[-1]["status"] == "CACHE_HIT" and agent.ledger.summary()["calls"] == 1

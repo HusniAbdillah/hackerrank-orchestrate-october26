@@ -50,6 +50,6 @@ def test_dispatcher_cannot_write_or_override_cutoff(name, args):
 
 
 def test_tool_schemas_are_read_only_and_closed():
-    assert {t["name"] for t in TOOL_SCHEMAS} == {"search_evidence", "trace_identity", "inspect_timeline", "explain_policy"}
+    assert {t["name"] for t in TOOL_SCHEMAS} == {"search_evidence", "trace_identity", "inspect_timeline", "explain_policy", "inspect_source"}
     assert all(t["read_only"] and t["parameters"]["additionalProperties"] is False for t in TOOL_SCHEMAS)
     assert tools().invoke("trace_identity", {})["users"] == ["user_fixture"]

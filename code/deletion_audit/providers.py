@@ -162,7 +162,7 @@ class Provider:
         return ("https://generativelanguage.googleapis.com/v1beta/models/" + quote(cfg.model, safe="-._") + ":generateContent",
                 body, {"x-goog-api-key": cfg.key})
 
-    def complete(self, messages, tools=None, schema=None, image=None, deadline=None, case_id=None):
+    def complete(self, messages, tools=None, schema=None, image=None, deadline=None, case_id=None, trace_context=None):
         cfg = self.config
         if not configured(cfg.key):
             raise ProviderError("CREDENTIAL_UNAVAILABLE")
@@ -177,6 +177,7 @@ class Provider:
             record = {"provider": cfg.provider, "model": cfg.model, "case_id": case_id, "attempt": attempt,
                       "input_rate_usd_per_million": cfg.input_rate, "output_rate_usd_per_million": cfg.output_rate,
                       "estimated_cost_usd": reserved, "usage_reported": False}
+            record.update({k: v for k, v in (trace_context or {}).items() if k in {"round_id", "call_id", "context_hash"}})
             self.ledger.records.append(record)
             self.ledger.checkpoint(record, "reserved")
             start = time.monotonic()
