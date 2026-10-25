@@ -1,3 +1,7 @@
+> Current: [proof_quality_submission.md](proof_quality_submission.md). All three files exist; output.csv is best-effort, format-valid but 516/518 strict-valid. 337 tests pass. NO-GO for claiming full correctness; GO only for disclosed experimental upload. Historical sections follow.
+
+> Latest: [active_agent_submission.md](active_agent_submission.md). Real full run: 9 DeepSeek calls, 3 accepted recommendations, zero prediction delta. 320 tests pass; strict 510/518, experimental 516/518. Historical reports follow.
+
 > **Latest final sprint:** [final_submission_sprint.md](final_submission_sprint.md). 305 tests pass. Experimental candidate: 518 rows, 516 contract-valid, eight assumed verdicts; not evidence-validated. Strict coverage stays 510/518. Results below are historical.
 
 > Final recovery: **235 tests**, opt-in candidate preflight blocked without unsupported claims. Current upload checklist and official schedule verification: [submission_recovery.md](submission_recovery.md). Previous iteration reports below are historical.

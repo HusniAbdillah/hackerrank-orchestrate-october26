@@ -1,3 +1,64 @@
+# Final Proof Ledger and publication — current results
+
+337 tests pass. Root output.csv now exists as EXPLICIT EXPERIMENTAL BEST-EFFORT:
+518 sorted rows with valid CSV/JSON format, 516/518 strict contract-valid, eight
+assumption-based COMPLETE verdicts. It is not evidence-validated. case_55/case_63
+still lack verification and fail STATUS_SHAPE; strict mode remains 510/518 and
+509 pass both internal verdict/full proof-plan checks. Nine proof/plan risks remain.
+This publication changes deliverable availability, not prediction bytes or truth.
+
+Matched sample results remain status 90.625%, exact/sequence 28.125%, precision
+97.546012%, recall 82.383420%, F1 89.325843%, field 77.447426%, validity 29/32.
+Novel grounded facts, resolved obligations, changed predictions, improved/regressed
+sample cases: all zero. The 34 missing verification steps remain source/ownership
+or cutoff gaps; no label-dependent step suppression or invented join was added.
+
+New real pilot: one sample case, four DeepSeek calls, 13 ledger goals (nine ACCEPTED,
+four UNRESOLVED). Overall plan REJECTED for a missing search finding. No gain =>
+paid experiments stopped. The latest full run made no model calls. An inherited
+routing gate was fixed and regression-tested, but not re-benchmarked live after
+this stopping decision. Do not claim more than the three historical full AI cases.
+
+Ledger/source/coverage checks, conjunction-scoped multilingual regression fixes and
+explicit format-only publication are documented in docs/proof_quality_submission.md.
+Actual tools and ledger table: code/evaluation/agent_execution_report.md.
+90-second pitch/case study: code/evaluation/interview_brief.md.
+Three independent custom business cases and historical results are retained below.
+
+---
+
+# Active AI runtime — current measured evaluation
+
+320 tests pass. A real bounded multi-step agent now recommends intent, proof goals,
+verdict and complete plans. Source/identity/cutoff/policy/planner validation remains
+independent. All 32 samples were evaluated: status 90.625%, exact-case/sequence 28.125%,
+step precision 97.546012%, recall 82.383420%, F1 89.325843%, field 77.447426%.
+All metrics equal the regenerated deterministic baseline. Improved/regressed sample
+cases, canonical prediction changes, unique new facts and enrichments: all zero.
+
+Three selected sample investigations made 11 real DeepSeek calls after the initial
+pilot. One plan was ACCEPTED and two ACCEPTED_WITH_UNRESOLVED_OBLIGATIONS. The full
+518-row AI-enabled run made nine live calls on three automatically selected cases:
+case_113 COMPLETE, case_114 INCOMPLETE, case_115 INCOMPLETE. All three recommendations
+matched independent validation. 356 sufficient cases and ten non-deletion cases
+were skipped; 149 eligible cases were not investigated because the case cap was exhausted.
+Do not describe all 518 as model-investigated. Actual tool rounds, arguments, plans,
+source citations and validation are in code/evaluation/agent_execution_report.md.
+
+Strict validity remains sample 29/32, full 510/518, eight unresolved verdicts and one
+additional conditional plan gap (509 pass both internal verdict and full proof/plan).
+The experimental candidate has 518 rows but 516 contract-valid; eight assumed COMPLETE
+verdicts are not evidence-proven, and case_55/case_63 lack verification. Root output.csv
+remains absent. No LLM accuracy gain or complete submission is claimed.
+
+The initial pilot failed future citations, missing verification and some source references.
+One targeted correction tightened schema/prompt and recognized independently computed
+scoped negatives. No grounding rules were weakened. This improved recommendation validity,
+not canonical predictions. Runtime role and exact commands: docs/active_agent_submission.md.
+Three independent custom business cases and historical measurements remain below.
+
+---
+
 # Final submission sprint — authoritative current measurements
 
 305 tests pass. Clause/object-aware multilingual authorization and identifier-coverage

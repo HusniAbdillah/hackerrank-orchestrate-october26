@@ -1,5 +1,22 @@
 # HackerRank Orchestrate - October 2026
 
+Current final artifacts/results: [docs/proof_quality_submission.md](docs/proof_quality_submission.md).
+337 tests pass. Root output.csv now exists as explicit best-effort: 518 format-valid rows,
+516 strict contract-valid, eight assumed verdicts, NOT evidence-validated. Strict mode
+remains 510/518. Read output_diagnostics.json and the current report before uploading.
+The latest real proof-ledger pilot made four DeepSeek calls with zero prediction gain;
+paid runs stopped. Final materialization explicitly uses zero model budget. Actual
+tool/ledger evidence and interview pitch are in code/evaluation/ Markdown reports.
+All earlier iteration descriptions below are historical.
+
+Latest active-agent run: [docs/active_agent_submission.md](docs/active_agent_submission.md).
+The LLM now recommends intent, verdict and full audit plans through five read-only tools;
+independent grounding/policy/planning retains authority. The full run made nine live
+DeepSeek calls on three cases; all three recommendations were accepted with no prediction
+or accuracy change. Readable actual traces: code/evaluation/agent_execution_report.md.
+320 tests pass. Strict validity remains 510/518; the experimental candidate remains
+516/518 contract-valid. Root output.csv is withheld. Older sections are historical.
+
 Latest final commands/results: [docs/final_submission_sprint.md](docs/final_submission_sprint.md).
 305 tests pass; strict coverage remains 510/518. The opt-in observed-scope candidate
 contains 518 rows but only 516 pass contract validation; eight verdicts are assumed,
