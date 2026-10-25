@@ -18,26 +18,64 @@ It requires no model API key. `run` remains the earlier metadata readiness comma
 use `solve` to generate predictions.
 
 ```text
-python code/main.py solve --split sample --output artifacts/sample_predictions.csv --report artifacts/sample_solver_report.json
+python code/main.py solve --split sample --output artifacts/sample_predictions.csv --report artifacts/sample_solver_report.json --extractions artifacts/ocr_cache
 python code/main.py evaluate --split sample --predictions artifacts/sample_predictions.csv --report artifacts/sample_evaluation.json
 python code/evaluation/diagnose_solver.py --predictions artifacts/sample_predictions.csv --solver-report artifacts/sample_solver_report.json --output artifacts/sample_mismatches.json
-python code/main.py solve --split full --output artifacts/full_predictions.csv --report artifacts/full_solver_report.json
+python code/main.py solve --split full --output artifacts/full_predictions.csv --report artifacts/full_solver_report.json --extractions artifacts/ocr_cache --submission-output output.csv
 ```
 
-The sample run writes all 32 rows, with 75% measured status accuracy and 85.546%
-step F1. Eight cases lack sufficient proof (three have no grounded resource link). They are explicitly
+The sample run writes all 32 rows, with 90.625% measured status accuracy and 89.326%
+step F1. Three cases lack an admissible grounded resource link. They are explicitly
 unresolved with a null internal verdict and blank diagnostic CSV status;
-these eight rows deliberately fail validation. `solve` and `evaluate` therefore return
+these three rows deliberately fail validation. `solve` and `evaluate` therefore return
 exit code 1 while still writing their artifacts. Exit 2 means fatal input/configuration
 failure. The current outputs are diagnostic predictions, **not submission-ready**.
 Full processing writes 518 rows; evidence gaps still block fully valid submission output.
-Full-run contract-valid coverage is now 413/518 after optional local OCR (105 unresolved).
+Full-run contract-valid coverage is now 510/518 after optional local OCR (8 unresolved).
+One decided case has incomplete proof/plan scope, so publication remains blocked.
+The latest grounded catalog/listing join adds three sample steps omitted by the public
+reference, lowering step precision/F1 despite improved full coverage. See
+[docs/submission_debugging.md](docs/submission_debugging.md) for the measured tradeoff,
+all original 13 abstentions and 21 plan ledgers. No sample-specific suppression is used.
 Use `python code/main.py ocr --output artifacts/ocr_cache` on Windows, then add
 `--extractions artifacts/ocr_cache` to solve commands. `--submission-output output.csv`
 publishes only when all verdicts, proof scopes, validation and integrity checks pass.
 
 See [docs/submission_readiness.md](docs/submission_readiness.md) for current results, exact limitations,
 per-case discrepancies, and the next accuracy priorities. No dataset file is modified.
+
+## Optional live Audit Investigator
+
+Gemini and DeepSeek integrations use their documented HTTPS APIs, with no agent framework.
+The agent can call four read-only tools; deterministic checks retain control of identity,
+evidence admissibility, policy, verdicts and CSV ordering. Live text/tool investigations
+succeeded with both providers, and Gemini image extraction succeeded. **No incremental
+sample accuracy gain from AI was measured** in this iteration; unsupported proposals were rejected.
+
+Configure an ignored `.env` using `.env.example` (preserve existing credentials), set
+`LLM_ENABLED=true`, and select `DEEPSEEK_MODEL=deepseek-flash` or
+`GEMINI_MODEL=gemini-3.5-flash-lite`. Never put keys on command lines or in reports.
+
+```text
+python code/main.py solve --split sample --output artifacts/deepseek_predictions.csv --report artifacts/deepseek_run.json --extractions artifacts/ocr_cache --ai deepseek --max-ai-cases 3 --max-model-calls 12 --max-cost-usd 0.20 --ai-case-seconds 180
+python code/main.py evaluate --split sample --predictions artifacts/deepseek_predictions.csv --report artifacts/deepseek_evaluation.json
+python code/main.py solve --split sample --output artifacts/gemini_predictions.csv --report artifacts/gemini_run.json --extractions artifacts/ocr_cache --ai gemini --max-ai-cases 3 --max-model-calls 12 --max-cost-usd 0.20 --ai-case-seconds 180
+python code/main.py evaluate --split sample --predictions artifacts/gemini_predictions.csv --report artifacts/gemini_evaluation.json
+```
+
+`--ai auto` routes text to DeepSeek and flagged OCR ambiguity to Gemini; `--vision`
+permits original-image extraction for those flags. Sufficient deterministic cases and cases
+without grounded resource candidates are skipped. No bulk paid full-run investigation was
+justified by the sample experiment. See [docs/ai_investigator.md](docs/ai_investigator.md)
+for limits, cache validity, costs, failure accounting, and exact reproduction commands.
+Without configured credentials the optional agent reports unavailability and falls back.
+`--ai none` (the default) neither loads `.env` nor makes network calls.
+
+Build a source-only review package with `python code/package_submission.py`.
+It writes `artifacts/code.zip`, excludes dataset, credentials, runtime caches and traces,
+and includes required reports in both supported archive locations. This package does not
+make the unresolved predictions submission-ready. Export agent traces separately after
+ending the session, following `agent_trace_instructions.md`.
 
 Use Python 3.11+. Evaluation/readiness uses the standard library; PDF ingestion additionally
 requires the pinned `pypdf` dependency in `requirements.txt`. To install dependencies and run tests:

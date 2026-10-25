@@ -5,3 +5,4 @@ artifacts/
 output.csv
 .env
 .env.*
+!.env.example

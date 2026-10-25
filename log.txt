@@ -539,3 +539,341 @@ branch=main
 repo_root=D:\Hackathon\hackerrank-orchestrate-october26
 worktree=D:\Hackathon\hackerrank-orchestrate-october26
 parent_agent=none
+
+## [2026-10-25T04:19:57.254167+00:00] Implement scoped audit fixes and live Gemini/DeepSeek investigator
+
+User Prompt (verbatim, secrets redacted):
+# Context from my IDE setup:
+
+## Active file: docs/submission_readiness.md
+
+## Open tabs:
+- submission_readiness.md: docs/submission_readiness.md
+- ingestion_identity.md: docs/ingestion_identity.md
+- evaluation_foundation.md: docs/evaluation_foundation.md
+- audit_solver.md: docs/audit_solver.md
+- extract_png.ps1: code/tools/extract_png.ps1
+
+## My request:
+Continue the existing HackerRank Orchestrate "Ghost Data Still Exists" project. Implement measurable solver improvements and a real AI-powered audit investigator using my available Gemini and DeepSeek API credentials.
+
+Read the existing source code, problem statement, dataset analysis, evidence ingestion reports, solver diagnostics, sample mismatches, agent trace instructions, and submission requirements before making changes.
+
+CURRENT BASELINE:
+- 185 tests passing.
+- Full-run contract validity: 413/518, with 105 unresolved cases.
+- Sample status accuracy: 75%.
+- Sample exact-case/sequence accuracy: 28.125%.
+- Step F1: 85.546%; field accuracy: 72.607%.
+- Windows.Media.Ocr has extracted all 11 PNG files, with local cached OCR.
+- Four read-only investigator tools already exist.
+- No live application LLM calls have been performed.
+- All 103 dataset files must remain unchanged.
+
+PRIMARY OBJECTIVE:
+Improve measured prediction accuracy, reduce unresolved cases through evidence-grounded reasoning, integrate real Gemini and DeepSeek API calls, and produce the most complete valid submission possible. Prioritize working results over architectural complexity.
+
+PHASE 1 — ROOT-CAUSE AUDIT AND SOLVER CORRECTIONS
+1. Inspect the actual diagnostics for all 105 unresolved cases and classify root causes.
+2. Audit verification sufficiency against the official challenge contract.
+3. Explicitly distinguish:
+   - Existing current-state evidence required for COMPLETE.
+   - Current evidence of noncompliance required for INCOMPLETE.
+   - Proposed future verification after remediation, where evidence_id should be empty.
+   - Scoped negative observations and limitations of replica coverage.
+   - Missing evidence versus evidence excluded because it occurs after audit_at.
+4. Detect incorrectly overrestrictive completeness or verification assumptions.
+5. Fix generalizable logic errors, not individual answer mappings.
+6. Do not invent evidence, infer unsupported ownership, or silently convert UNKNOWN to COMPLETE or INCOMPLETE.
+7. Produce an initial before/after evaluation before proceeding to paid model calls.
+
+PHASE 2 — PROVIDER INTEGRATION
+Implement optional provider adapters for:
+- Gemini API via GEMINI_API_KEY.
+- DeepSeek API via DEEPSEEK_API_KEY.
+
+Requirements:
+- Use maintained official SDKs or documented compatible HTTP APIs.
+- Verify current supported model IDs and API capabilities before choosing defaults.
+- Make model names configurable via environment variables.
+- Support structured responses and bounded tool calling where the selected model/API supports them.
+- Normalize provider-specific tool-call behavior behind one internal interface.
+- Enforce schema validation independently of provider responses.
+- Never print, log, or commit API keys.
+- Provide .env.example and configuration documentation.
+- Avoid unnecessary agent frameworks.
+- Preserve deterministic-only execution if credentials are unavailable.
+
+PHASE 3 — SINGLE AI AUDIT INVESTIGATOR
+Implement one Audit Investigator agent using the existing read-only tools:
+- search_evidence
+- trace_identity
+- inspect_timeline
+- explain_policy
+
+The agent should:
+1. Receive the case request, audit_at, baseline result, known resource links, and unresolved reasons.
+2. Choose tools to investigate evidence gaps, ambiguous intent, ownership, conflicting observations, and policy interpretation.
+3. Operate with strict limits on tool calls, model tokens, retries, and execution time.
+4. Produce schema-validated proposals containing resource_id, system_id, source/evidence_id, observation timestamp, proposed interpretation, and concise reasoning summary.
+5. Distinguish retrieved facts from hypotheses and unresolved questions.
+6. Be forbidden from fabricating evidence or treating its own text as evidence.
+7. Route every proposed fact through deterministic source validation, identity matching, and audit_at checks.
+8. Leave policy enforcement, final deletion_status, remediation planning, step ordering, and CSV serialization under deterministic control.
+9. Preserve all rejected agent proposals and reasons in internal diagnostics.
+
+PHASE 4 — INTELLIGENT PROVIDER ROUTING
+Use a configurable routing strategy:
+- Deterministic solver first for every case.
+- DeepSeek as the initial candidate for text-based evidence investigation.
+- Gemini as the initial candidate for visual or layout-sensitive evidence interpretation.
+- Support optional provider comparison on the same selected sample cases.
+- Avoid calling both providers for every case unless benchmarking justifies it.
+- Do not invoke vision APIs for screenshots adequately handled by grounded existing OCR unless further interpretation is likely to help.
+- Do not use LLM to compensate for evidence that genuinely does not exist.
+
+PHASE 5 — VISION EVIDENCE ENRICHMENT
+Preserve the current Windows.Media.Ocr workflow.
+Add an optional Gemini vision adapter for ambiguous screenshots.
+
+Require:
+- Structured extraction of visible UI state and record/resource associations.
+- Exact original evidence ID and image hash provenance.
+- Explicit separation of visually observed facts from interpretations.
+- Validation against identities and resources known to the dataset.
+- No automatic OCR typo repair without corroboration.
+- Cache vision results keyed by image hash, model, schema version, and prompt version.
+- Compare vision-derived facts with existing OCR facts and report disagreements.
+
+PHASE 6 — CACHING, OBSERVABILITY, COSTS
+Implement:
+- Per-case and per-image caching.
+- Model and provider identifiers.
+- Input/output token usage where reported.
+- API call counts and error counts.
+- Estimated costs using configurable documented rates.
+- Tool-call traces and structured investigator summaries.
+- Retries with backoff for transient errors.
+- Failure isolation so an API error cannot corrupt the full run.
+- Strict controls preventing excessive paid calls.
+
+PHASE 7 — EVALUATION AND ITERATION
+Evaluate three modes when credentials and budget permit:
+A. Deterministic baseline.
+B. Deterministic + DeepSeek investigator.
+C. Deterministic + Gemini investigator or Gemini vision where relevant.
+
+First run a small pilot on representative unresolved and mismatched sample cases, then evaluate all 32 samples before deciding on full-run provider usage.
+
+Measure:
+- Status accuracy.
+- Exact-case accuracy.
+- Step precision, recall, and F1.
+- Field accuracy.
+- Sequence accuracy.
+- Contract-valid rows.
+- Unresolved cases and root causes.
+- Model calls, tokens, estimated costs, and latency.
+
+Do not cherry-pick improvements, hardcode sample IDs, or use sample_output.csv in solver logic. Sample labels are for evaluation only.
+
+PHASE 8 — SUBMISSION READINESS
+1. Regenerate all 518 predictions.
+2. Validate exact CSV schema, case count, phase ordering, operation/state compatibility, citation validity, and step numbering.
+3. Preserve uncertainty and rejected evidence in diagnostic artifacts, never silently inventing compliant verdicts.
+4. Publish output.csv only when it passes strict contract checks.
+5. Maintain evaluation_report.md, usage_report.md, required agent traces/logs, and runnable code packaging.
+6. Preserve all dataset SHA-256 hashes.
+7. Explain any unresolved blockers explicitly if a fully compliant output remains impossible.
+
+IMPLEMENTATION PRIORITY:
+- First fix logical errors causing unnecessary abstentions.
+- Then implement functional provider adapters and agent investigation.
+- Then run controlled paid API pilots.
+- Then evaluate and improve full-run readiness.
+- Do not spend the entire iteration on abstractions or documentation.
+- Prefer measurable gains and maintainable, testable code.
+
+FINAL RESPONSE MUST INCLUDE:
+1. Files changed.
+2. Tests passing.
+3. Before/after metrics for every evaluated mode.
+4. Whether LIVE Gemini and DeepSeek calls actually succeeded.
+5. Provider/model configuration and environment variables.
+6. Total API calls, token usage, and estimated costs.
+7. Remaining unresolved cases by cause.
+8. Exact commands for sample and full runs.
+9. Current submission readiness and next most valuable improvements.
+
+If credentials are not configured, test adapters with mocks and explicitly distinguish mocked integration from successful live API evaluation. Never claim measured AI-agent improvements without actual model executions.
+
+
+Agent Response Summary:
+Implemented general scoped primary-inventory proof, reducing full unresolved cases from 105 to 13 and raising sample status accuracy from 75% to 90.625% and step F1 from 85.546% to 90.085%. Added bounded Gemini/DeepSeek HTTP adapters, a read-only tool investigator, independently grounded proposals, optional original-image vision, caches, durable usage journals and cost controls; live investigations succeeded with both providers, but no incremental AI accuracy gain was measured. All 214 tests and the evaluator self-test passed, all 94 manifest files were accounted for, and all 103 dataset SHA-256 hashes remained unchanged. The full run generated 518 diagnostic rows with 505 contract-valid; 13 unresolved and 21 other incomplete-plan cases block output.csv publication. Recorded 36 generation attempts plus two discovery requests, disclosed nine unknown-usage attempts and one interrupted pre-journal run, and prepared a credential-free source archive and measured reports.
+
+Actions:
+* Edited solver, CLI and investigator tools; added ai_config.py, providers.py, proposals.py, ai_auditor.py and 29 regression tests.
+* Ran deterministic sample/full prediction, strict validation, public sample evaluation, mismatch/abstention reviews, ingestion inventory checks and SHA-256 comparisons.
+* Executed bounded live DeepSeek/Gemini tool investigations, model discovery, Gemini schema probe and image extraction; retained rejected proposals, API failures and usage limitations.
+* Ran python -m pytest -q (214 passed in 28.78s) and controlled evaluator self-test.
+* Updated README/config/evaluation/usage/readiness documentation and built artifacts/code.zip; checked archive CRC, exclusions and configured-credential absence. Native active trace was preserved; no dataset files or credentials were edited.
+
+Context:
+tool=Codex Desktop
+model=gpt-6.1-sol
+branch=main
+repo_root=D:\Hackathon\hackerrank-orchestrate-october26
+worktree=D:\Hackathon\hackerrank-orchestrate-october26
+parent_agent=none
+
+## [2026-10-25T04:22:33.927724+00:00] Explain dataset location, SQL snapshots and executed commands
+
+User Prompt (verbatim, secrets redacted):
+# Context from my IDE setup:
+
+## Active file: docs/submission_readiness.md
+
+## Open tabs:
+- submission_readiness.md: docs/submission_readiness.md
+- ai_investigator.md: docs/ai_investigator.md
+- usage_report.md: code/evaluation/usage_report.md
+- evaluation_report.md: code/evaluation/evaluation_report.md
+- aggregate_usage.py: code/evaluation/aggregate_usage.py
+
+## My request:
+database yang ada sekarang dan berbagai command yang kamu berikan apakah sudah dijalankan semuanya? sekarang databasenya ada di mana ya
+kode sql itu gimana
+
+
+Agent Response Summary:
+Verified the actual SQL parser, 24 database snapshot files, and persisted test, evaluator, solver and packaging reports. Explained that SQL snapshots live under dataset/evidence/databases and are loaded into disposable SQLite memory databases, with no persistent application database or database service required. Distinguished previously executed sample/full/test/API pilot commands from unexecuted bulk paid rollout and blocked submission publication; no new provider calls or dataset edits were made.
+
+Actions:
+* Read repository agent instructions and searched SQL ingestion code.
+* Inspected SQL inventory and representative CREATE TABLE/INSERT statements, final test results, sample metrics, full publication guard and archive validation.
+* Appended this conversation entry; source and dataset unchanged.
+
+Context:
+tool=Codex Desktop
+model=gpt-6.1-sol
+branch=main
+repo_root=D:\Hackathon\hackerrank-orchestrate-october26
+worktree=D:\Hackathon\hackerrank-orchestrate-october26
+parent_agent=none
+
+## [2026-10-25T04:48:50.911018+00:00] Submission debugging, source matrices and reproducible packaging
+
+User Prompt (verbatim, secrets redacted):
+# Context from my IDE setup:
+
+## Active file: docs/submission_readiness.md
+
+## Open tabs:
+- submission_readiness.md: docs/submission_readiness.md
+- ai_investigator.md: docs/ai_investigator.md
+- usage_report.md: code/evaluation/usage_report.md
+- evaluation_report.md: code/evaluation/evaluation_report.md
+- aggregate_usage.py: code/evaluation/aggregate_usage.py
+
+## My request:
+Continue the existing HackerRank Orchestrate "Ghost Data Still Exists" project.
+
+This is now a SUBMISSION-ORIENTED DEBUGGING iteration. Do not introduce new frameworks, redesign the architecture, or spend time on features that do not improve measured results.
+
+Read the actual code, official problem statement, deletion policies, sample evaluation reports, full-run diagnostics, docs/ai_investigator.md, docs/submission_readiness.md, and agent trace instructions before making changes.
+
+CURRENT MEASURED BASELINE:
+- 214 tests passing.
+- 505/518 contract-valid full-run cases.
+- 13 unresolved full-run verdicts.
+- 21 decided cases with incomplete plan scope.
+- Sample status accuracy 90.625%.
+- Sample exact-case/sequence accuracy 28.125%.
+- Step precision 99.375%; recall 82.383%; F1 90.085%.
+- Field accuracy 78.792%.
+- Sample contract validity 29/32.
+- Live Gemini and DeepSeek integrations function, but neither has yet improved sample accuracy.
+- All 103 dataset file hashes remain unchanged.
+
+PRIMARY GOAL:
+Maximize evidence-grounded prediction accuracy and produce a fully contract-valid, reproducible submission if justified by the evidence.
+
+PHASE 1: RESOLVE THE 13 REMAINING ABSTENTIONS
+1. Produce an individual root-cause matrix for all 13 cases, including request, audit_at, evidence candidates, ownership links, policy obligations, and exact reason for unresolved verdict.
+2. Distinguish legitimately unavailable evidence from overly restrictive validation, unsupported readback semantics, invalid temporal joins, and missing identity relationships.
+3. Trace why each candidate observation was accepted or excluded.
+4. Specifically inspect literal catalog/listing joins, historical identity reassignment, retained-record negative scope, and screenshot corroboration.
+5. Fix generalizable logic where the source evidence supports it.
+6. Never use post-audit evidence to prove a pre-audit fact unless the official rules explicitly allow it.
+7. Never fabricate evidence, resource identities, ownership, or verification claims.
+8. Do not force UNKNOWN into COMPLETE or INCOMPLETE simply to pass schema validation.
+
+PHASE 2: COMPLETE THE 21 DECIDED CASES WITH INCOMPLETE PLAN SCOPE
+1. Generate an obligation ledger per case from applicable deletion policies.
+2. Compare expected resource-level obligations against actual emitted findings, remediation, and verification steps.
+3. Identify omitted but grounded resources and steps, incorrect operation/state assignments, missing retained-record verification, and replica-scoping mistakes.
+4. Correct deterministic planning with policy-general rules.
+5. Verify canonical ordering, evidence ID requirements, and step numbering.
+6. Ensure an INCOMPLETE remediation plan contains legitimate future verification steps with empty evidence_id where the challenge contract requires it.
+7. Never add speculative resources or steps solely to increase recall.
+
+PHASE 3: SAMPLE EXACT-MATCH ERROR ANALYSIS
+1. Evaluate all 32 sample predictions using the existing gold evaluator.
+2. Categorize every mismatch into status, missing steps, extra steps, wrong phase/operation/state, wrong system/resource, wrong evidence citation, ordering, or other fields.
+3. Group issues by reusable root cause and quantify their contribution to exact-case failures.
+4. Fix highest-impact generalizable causes first.
+5. Keep sample golden answers strictly outside prediction logic and never hardcode case-specific outputs.
+6. Preserve precision while increasing recall, and rerun all sample metrics after each meaningful fix.
+
+PHASE 4: TARGETED AI INVESTIGATION ONLY WHERE JUSTIFIED
+1. Use existing DeepSeek/Gemini investigator implementations on selected remaining ambiguous cases.
+2. Examine rejected model proposals to see whether rejection reflects a true lack of evidence or incorrect deterministic grounding.
+3. Do not increase LLM token budgets or run full paid batches without evidence that the pilot improves measurable results.
+4. Keep source provenance and policy decisions validated independently of AI output.
+5. Preserve model usage/cost traces and provider-independent deterministic runs.
+
+PHASE 5: FINAL VALIDATION AND PACKAGING
+1. Run the complete test suite.
+2. Generate deterministic and, if proven helpful, agent-assisted sample predictions.
+3. Generate all 518 full predictions.
+4. Validate strict submission schema and exact required ordering.
+5. Publish output.csv only when every row is contract-valid.
+6. Verify no dataset files have changed.
+7. Refresh evaluation_report.md, usage_report.md, submission readiness documentation, and required append-only traces.
+8. Verify code.zip has complete runnable source, dependency/configuration instructions, and no dataset, API secrets, credentials, or intermediate private artifacts.
+9. Confirm that fresh-environment execution works without needing to rely on undeclared local caches or hardcoded Windows paths.
+
+REQUIRED RESULTS:
+- A before/after metrics table.
+- Explicit list of all remaining unresolved cases and why.
+- Counts of full contract-valid rows and incomplete plans.
+- Sample exact-case accuracy, status accuracy, step precision/recall/F1, field accuracy, and sequence accuracy.
+- Model calls and estimated cost when applicable.
+- Final exact validation and packaging commands.
+- Honest submission readiness assessment and remaining blockers.
+
+IMPORTANT:
+- Prioritize measured improvements over increasing test count.
+- Maintain compatibility with the current pipeline.
+- If full contract validity cannot be achieved from admissible evidence, do not falsify claims; provide a detailed blocker report.
+- Do not stop at analysis if safely implementable fixes are available.
+
+
+Agent Response Summary:
+Implemented source-supported support-message PII detection, literal catalog/document/listing joins with combined temporal availability, and stricter negative scope for undeclared mixed SQL exports. Five of 13 original full abstentions are resolved (510/518 contract-valid, eight unresolved), and 20 of 21 originally incomplete decided plans are complete; case_34 remains blocked by missing retained data and no allowed restore operation. Public sample status/exact/sequence remain 90.625%/28.125%/28.125%; three additional grounded object steps outside the reference reduce precision to 97.546%, F1 to 89.326%, and field accuracy to 77.447%, transparently documented rather than suppressed using labels. All 222 tests passed, including a fresh dependency environment run; regenerated all 11 OCR extractions in an unpacked source package and obtained byte-identical sample/full predictions without copying caches or credentials. All 103 dataset hashes are unchanged, zero new provider calls/cost were incurred (one revalidated Gemini vision cache hit), detailed case/obligation/mismatch reports and a safe source ZIP were refreshed, and output.csv publication remains blocked.
+
+Actions:
+* Read source, official problem, policy, reports, agent and trace instructions; preserved baseline under artifacts/submission_debug/before/.
+* Edited state.py, solver.py, extractions.py and added artifact_links.py with eight independent regressions.
+* Added code/evaluation/debug_submission.py; extended diagnose_solver.py with anchored field errors and exact-case root-cause contributions.
+* Ran iterative sample/full solvers, evaluator, strict validation, evaluator self-test, all 222 tests, fresh-environment dependency installation/OCR/sample/full reproduction and dataset SHA-256 checks.
+* Revalidated existing Gemini vision proposal at zero API/cost budget; kept unsupported identity proposal rejected.
+* Updated README, readiness/debugging/AI/evaluation/usage documents; rebuilt and checked artifacts/code.zip for CRC, required reports, exclusions and configured-credential absence. Active native trace preserved.
+
+Context:
+tool=Codex Desktop
+model=gpt-6.1-sol
+branch=main
+repo_root=D:\Hackathon\hackerrank-orchestrate-october26
+worktree=D:\Hackathon\hackerrank-orchestrate-october26
+parent_agent=none
