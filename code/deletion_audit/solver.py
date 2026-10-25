@@ -258,8 +258,21 @@ def solve(dataset: Path, split: str, output: Path, extractions: Path | None = No
     graph, policy = IdentityGraph.load(dataset), Policy.load(dataset)
     requests = load_requests(dataset, split)
     rows, cases = [], []
-    for cid, request in sorted(requests.items()):
-        decision = decide_case(request, store, graph, policy)
+    execution = sorted(requests)
+    prepared = {}
+    if ai is not None and getattr(ai, "audit_mode", False) and getattr(ai, "max_cases", 0) > 0:
+        from .investigator import AuditTools
+        from .agent_context import investigation_context, route_case
+        priorities = {}
+        for cid, request in requests.items():
+            prepared[cid] = decide_case(request, store, graph, policy)
+            tools = AuditTools(request, store, graph, policy)
+            route = route_case(tools, prepared[cid].diagnostic, investigation_context(tools, prepared[cid].diagnostic))
+            priorities[cid] = route["priority"] if route["eligible"] else -1
+        execution.sort(key=lambda cid: (-priorities[cid], cid))
+    for cid in execution:
+        request = requests[cid]
+        decision = prepared[cid] if cid in prepared else decide_case(request, store, graph, policy)
         if ai is not None:
             from .investigator import AuditTools
             accepted = ai.investigate(AuditTools(request, store, graph, policy), decision.diagnostic)
@@ -279,8 +292,21 @@ def solve(dataset: Path, split: str, output: Path, extractions: Path | None = No
                     "resource_links_added": sorted(set(map(tuple, updated.diagnostic["resource_keys"])) -
                                                    set(map(tuple, decision.diagnostic["resource_keys"]))) }
                 decision = updated
+            if ai.events:
+                event = ai.events[-1]
+                changed = bool(decision.diagnostic.get("ai_effects", {}).get("status_changed") or
+                               decision.diagnostic.get("ai_effects", {}).get("steps_changed"))
+                for goal in event.get("recommendation_validation", {}).get("proof_ledger", []):
+                    goal["canonical_prediction_changed"] = changed
+                    goal["change_attribution"] = "Case-level delta; not an isolated causal claim about this goal"
+                decision.diagnostic["ai_audit"] = {"execution_status": event.get("status"),
+                    "recommendation": event.get("audit_recommendation"),
+                    "validation": event.get("recommendation_validation"),
+                    "changed_output": changed}
         rows.append({"case_id": cid, "deletion_status": decision.status or "", "steps_json": json.dumps(decision.steps, separators=(",", ":"))})
         cases.append(decision.diagnostic)
+    rows.sort(key=lambda row: row["case_id"])
+    cases.sort(key=lambda case: case["case_id"])
     output.parent.mkdir(parents=True, exist_ok=True)
     with output.open("w", encoding="utf-8", newline="") as stream:
         writer = csv.DictWriter(stream, fieldnames=OUTPUT_FIELDS)
@@ -328,6 +354,14 @@ def solve(dataset: Path, split: str, output: Path, extractions: Path | None = No
                                          "category": o.category, "basis": "correlated legacy_contact_index source"}
                                         for o in store.observations if o.observation_id.endswith(":typed")],
             "ai_investigations": ai.events if ai is not None else [],
+            "ai_case_counts": ({"events": len(ai.events),
+                "selected": getattr(ai, "selected", len(ai.events)),
+                "live_called": len({r.get("case_id") for r in ai.ledger.records}),
+                "cached": sum(e.get("status") == "CACHE_HIT" for e in ai.events),
+                "skipped_by_reason": dict(Counter(e.get("status", "UNKNOWN") for e in ai.events if e.get("status", "").startswith(("SKIPPED", "DISABLED", "CREDENTIAL")))),
+                "recommendations": sum("audit_recommendation" in e for e in ai.events),
+                "recommendation_results": dict(Counter(e["recommendation_validation"]["validation"] for e in ai.events if "recommendation_validation" in e)),
+                "changed_output": sum(c.get("ai_audit", {}).get("changed_output", False) for c in cases)} if ai is not None else {}),
             "model_usage": ai.ledger.summary() if ai is not None else {"calls": 0, "input_tokens": 0, "output_tokens": 0, "estimated_cost_usd": 0},
             "model_call_records": ai.ledger.records if ai is not None else [],
             "runtime_seconds": perf_counter() - start,

@@ -16,6 +16,11 @@ from test_solver import obs
     "アカウントを削除してください。請求書は削除しないでください。",
     "계정을 삭제해 주세요. 청구서는 삭제하지 마세요.",
     "删除我的账户。不要删除发票。",
+    "Jangan hapus faktur dan hapus akun saya.",
+    "No borres mis facturas y elimina mi cuenta.",
+    "Ne supprimez pas mes factures et supprimer mon compte.",
+    "Nao apague minhas faturas e exclua minha conta.",
+    "Do not delete invoices and erase my account.",
 ])
 def test_account_deletion_with_document_preservation(text):
     assert authorize(text).authorized is True
@@ -36,6 +41,7 @@ def test_no_deletion_consent(text):
 def test_conflicting_account_consent_is_unknown():
     assert authorize("Delete my account. Do not delete my account.").authorized is None
     assert authorize("Delete my account. Keep my account active.").authorized is None
+    assert authorize("Supprimer mon compte et ne supprimez pas mon compte.").authorized is None
 
 
 @pytest.mark.parametrize("fields", [{}, {"email": None}, {"name": None, "email": None},

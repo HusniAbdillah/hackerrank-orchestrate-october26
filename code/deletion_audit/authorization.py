@@ -17,11 +17,11 @@ def _account_clauses(value: str) -> tuple[bool, bool]:
     Keeping an invoice is not a veto on deleting an account. Contradictory
     instructions about the account itself must not be resolved as consent.
     """
-    clauses = re.split(r"[.!?;,\n。！？；，]|\b(?:but|however|pero|mais|mas|tetapi|namun)\b", value)
+    clauses = re.split(r"[.!?;,\n。！？；，]|\b(?:but|however|pero|mais|mas|tetapi|tapi|namun|and|y|dan|et|e)\b", value)
     target = re.compile(
         r"(?:delete|erase|remove|close)\s+(?:(?:my|the|this|permanently)\s+){0,4}(?:account|profile|personal data)\b|"
         r"(?:eliminar|elimina|borra|borres|elimines)\s+(?:mi\s+)?cuenta\b|"
-        r"(?:supprimer|supprimez)\s+(?:(?:mon|le|votre)\s+)?compte\b|"
+        r"(?:supprimer|supprimez)\s+(?:pas\s+)?(?:(?:mon|le|votre)\s+)?compte\b|"
         r"(?:excluir|exclua|apagar|apague)\s+(?:(?:a|minha)\s+){0,2}conta\b|"
         r"(?:hapus|menghapus)\s+(?:akun|profil|data pribadi)\b|"
         r"アカウント[^。！？]{0,20}削除|계정[^。！？]{0,20}삭제|(?:删除|刪除)[^。！？]{0,8}(?:账户|帳戶)")
