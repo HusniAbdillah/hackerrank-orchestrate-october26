@@ -61,7 +61,7 @@ def score(predictions: Validation, reference: Validation) -> dict:
         expected = truth.get(cid)
         rows = grouped.get(cid, [])
         unique = rows[0] if len(rows) == 1 and expected is not None else None
-        expected_steps = expected.steps if expected else []
+        expected_steps = expected.steps if expected is not None and expected.steps is not None else []
         if unique is not None:
             status_ok = unique.status == expected.status
             sequence_ok = unique.steps is not None and canonical(unique.steps) == canonical(expected_steps)
@@ -93,7 +93,11 @@ def score(predictions: Validation, reference: Validation) -> dict:
             field_slots += len(expected_steps) + sum(len(_items(row)) for row in rows)
         if expected is not None:
             cases.append({"case_id": cid, "status_correct": bool(status_ok),
-                          "exact_case": bool(exact_ok), "sequence_correct": bool(sequence_ok)})
+                          "exact_case": bool(exact_ok), "sequence_correct": bool(sequence_ok),
+                          "expected_status": expected.status,
+                          "predicted_status": unique.status if unique else None,
+                          "missing_steps": _difference(expected_steps, _items(unique) if unique else []),
+                          "extra_steps": _difference(_items(unique) if unique else [], expected_steps)})
 
     precision = tp / predicted_steps if predicted_steps else float(reference_steps == 0)
     recall = tp / reference_steps if reference_steps else 1.0
@@ -118,8 +122,34 @@ def score(predictions: Validation, reference: Validation) -> dict:
                            "accuracy": field_correct[field] / field_slots if field_slots else 1.0}
                    for field in STEP_FIELDS},
         "validation": predictions.report(), "cases": cases,
+        "error_categories": dict(Counter(category for case in cases for category in _errors(case))),
         "matching_definitions": MATCHING_DEFINITIONS,
     }
+
+
+def _difference(left, right):
+    remaining = Counter(map(_token, right))
+    result = []
+    for step in left:
+        token = _token(step)
+        if remaining[token]:
+            remaining[token] -= 1
+        else:
+            result.append(step)
+    return result
+
+
+def _errors(case):
+    """Observable mismatch classes, not inferred semantic root causes."""
+    if not case["status_correct"]:
+        yield "status_mismatch"
+    for step in case["missing_steps"]:
+        yield "missing_" + step["phase"].lower()
+    for step in case["extra_steps"]:
+        phase = step.get("phase") if isinstance(step, dict) else None
+        yield "extra_" + (phase.lower() if isinstance(phase, str) else "malformed")
+    if not case["sequence_correct"] and not case["missing_steps"] and not case["extra_steps"]:
+        yield "ordering_or_numbering"
 
 
 def evaluate(predictions: Path, reference: Path, requests: dict[str, Request],

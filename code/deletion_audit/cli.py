@@ -12,16 +12,22 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def main(argv=None) -> int:
-    parser = argparse.ArgumentParser(description="Deletion-audit evaluation foundation (no solver yet)")
+    parser = argparse.ArgumentParser(description="Deterministic deletion audit, ingestion, and evaluation")
     commands = parser.add_subparsers(dest="command", required=True)
-    for name in ("run", "validate", "evaluate", "self-test", "ingest"):
+    for name in ("run", "validate", "evaluate", "self-test", "ingest", "solve", "ocr"):
         command = commands.add_parser(name)
         command.add_argument("--dataset", type=Path, default=ROOT / "dataset")
-        if name not in {"self-test", "ingest"}:
+        if name not in {"self-test", "ingest", "ocr"}:
             command.add_argument("--split", choices=("sample", "full"), required=True)
         command.add_argument("--report", type=Path, help="Optional JSON report outside dataset/")
         if name in ("validate", "evaluate"):
             command.add_argument("--predictions", type=Path, required=True)
+        if name == "solve":
+            command.add_argument("--output", type=Path, required=True)
+            command.add_argument("--extractions", type=Path, help="Optional SHA-256-bound local OCR cache")
+            command.add_argument("--submission-output", type=Path, help="Publish only when all full-split verdicts, proof scopes and contract checks pass")
+        if name == "ocr":
+            command.add_argument("--output", type=Path, required=True, help="Extraction cache directory outside dataset/")
         if name == "ingest":
             command.add_argument("--inventory-doc", type=Path, default=ROOT / "docs/dataset_analysis.md")
             command.add_argument("--normalized", type=Path, help="Optional normalized observation JSONL")
@@ -31,7 +37,23 @@ def main(argv=None) -> int:
         if args.report:
             protect_output(args.report, args.dataset,
                            *([args.predictions] if hasattr(args, "predictions") else []))
-        if args.command == "ingest":
+        if args.command == "ocr":
+            if args.report and args.report.resolve().is_relative_to(args.output.resolve()):
+                raise InputError("OCR report must be outside the extraction cache directory")
+            from .ocr_cache import extract
+            report = extract(args.dataset, args.output)
+            exit_code = 0 if all(f["status"] != "unavailable" for f in report["files"]) else 1
+        elif args.command == "solve":
+            if args.report and args.extractions and args.report.resolve().is_relative_to(args.extractions.resolve()):
+                raise InputError("Report output must not overwrite the extraction cache")
+            if args.report:
+                protect_output(args.report, args.dataset, args.output)
+                if args.submission_output:
+                    protect_output(args.report, args.dataset, args.submission_output)
+            from .solver import solve
+            report = solve(args.dataset, args.split, args.output, args.extractions, args.submission_output)
+            exit_code = 0 if report["validation"]["valid"] and report["dataset_integrity"]["unchanged"] else 1
+        elif args.command == "ingest":
             outputs = [p for p in (args.report, args.normalized, args.identity_report) if p]
             if len({p.resolve() for p in outputs}) != len(outputs):
                 raise InputError("Report and normalized-output paths must be distinct")

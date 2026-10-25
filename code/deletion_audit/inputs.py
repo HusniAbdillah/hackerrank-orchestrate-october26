@@ -52,6 +52,7 @@ class Request:
     case_id: str
     audit_at: datetime
     email: str = ""
+    request_text: str = ""
 
 
 def load_requests(dataset: Path, split: str) -> dict[str, Request]:
@@ -71,7 +72,7 @@ def load_requests(dataset: Path, split: str) -> dict[str, Request]:
             raise InputError(f"{cid}: requested_at <= reported_at <= audit_at required")
         if row["reported_status"] not in {"COMPLETE", "PARTIALLY_COMPLETE", "NOT_STARTED"}:
             raise InputError(f"{cid}: invalid reported_status")
-        requests[cid] = Request(cid, audit, row["email"])
+        requests[cid] = Request(cid, audit, row["email"], row["request_text"])
     if not requests:
         raise InputError("Request split is empty")
     return requests
