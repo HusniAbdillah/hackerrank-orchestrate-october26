@@ -1,9 +1,16 @@
-# Submission readiness — submission debugging, 25 October 2026
+> **Latest final sprint:** [final_submission_sprint.md](final_submission_sprint.md). 305 tests pass. Experimental candidate: 518 rows, 516 contract-valid, eight assumed verdicts; not evidence-validated. Strict coverage stays 510/518. Results below are historical.
+
+> Final recovery: **235 tests**, opt-in candidate preflight blocked without unsupported claims. Current upload checklist and official schedule verification: [submission_recovery.md](submission_recovery.md). Previous iteration reports below are historical.
+
+# Submission readiness — final forensic review, 25 October 2026
 
 **Not submission-ready.** All 518 diagnostic rows are generated; 510 are contract-valid,
 eight verdicts remain unresolved, and one additional decided case has incomplete plan scope.
-Root output.csv was not published. All 103 dataset hashes remain unchanged. **222 tests pass**,
-including all original 214, and the controlled evaluator self-test passes.
+Root output.csv was not published. All 103 dataset hashes remain unchanged. **232 tests pass**,
+including the previous 224 and eight agent-boundary regressions; the controlled evaluator self-test passes.
+The final source/contract review is in docs/final_forensic_review.md. Lack of COMPLETE
+proof does not itself supply an allowed INCOMPLETE finding. The final iteration corrects
+case_34's overbroad retention diagnosis but does not change CSV predictions or accuracy.
 
 ## Measured before and after
 
@@ -11,16 +18,16 @@ including all original 214, and the controlled evaluator self-test passes.
 | --- | ---: | ---: |
 | Sample status accuracy | 90.625% | 90.625% |
 | Exact-case / sequence accuracy | 28.125% | 28.125% |
-| Step precision | 99.375% | 97.546% |
+| Step precision | 97.546% | 97.546% |
 | Step recall | 82.383% | 82.383% |
-| Step F1 | 90.085% | 89.326% |
-| Field accuracy | 78.792% | 77.447% |
+| Step F1 | 89.326% | 89.326% |
+| Field accuracy | 77.447% | 77.447% |
 | Sample contract-valid | 29/32 | 29/32 |
-| Full contract-valid | 505/518 | 510/518 |
-| Full unresolved | 13 | 8 |
-| Decided incomplete plans | 21 | 1 |
+| Full contract-valid | 510/518 | 510/518 |
+| Full unresolved | 8 | 8 |
+| Decided incomplete plans | 1 | 1 |
 
-Full coverage improves; public sample step accuracy regresses. The literal object listing
+The preceding debugging iteration improved full coverage but regressed public step accuracy. The literal object listing
 and explicit sole-owner catalog link support three extra object_19 steps omitted by the
 sample reference. They are retained rather than suppressed using sample labels. No sample
 accuracy improvement or hidden full accuracy is claimed. All intermediate measurements
@@ -55,20 +62,24 @@ Missing evidence cannot justify either COMPLETE or an invented noncompliance fin
 Three sample requests still have no admissible resource link. Nine full empty-link cases
 are justified non-deletion requests; full NOT_APPLICABLE count remains ten.
 
-The remaining decided plan gap is **case_34**. Rule_12 requires retention of audit_record_3753.
-Earlier evidence_01 proves availability; later declared inventory evidence_93 projects it
-absent. The allowed operation table has no restore/recover-record operation. Its other
-violations support INCOMPLETE, but a complete remediation plan cannot be represented safely.
-This issue remains explicit and blocks publication. No unsupported restoration or invented
-PRESENT verification is emitted. All other original 20 decided plan gaps are cleared.
+The remaining decided plan gap is **case_34**, now correctly RETENTION_CONDITION_UNPROVEN.
+Earlier evidence_01 proves audit_record_3753 was available; later evidence_93 omits it from
+the captured security table. Neither supplies that resource's retention period. Rule_12 is
+conditional, so a required-retention breach is not established; dates belonging to other
+records cannot be borrowed. The old REQUIRED_RETAINED_RECORD_MISSING claim was overbroad.
+Other direct account/attachment violations still establish INCOMPLETE, but the policy gap
+remains explicit and blocks publication. A proven retention breach would also require
+clarification because no restore/recover-record operation is allowed. No invented operation
+or PRESENT verification is emitted. The earlier 20 decided plan gaps remain cleared.
 
 ## AI, reproducibility and packaging
 
-No new provider calls/tokens/cost in this iteration. Existing rejected proposals were reviewed;
-the deterministic catalog adapter addresses a grounded extraction gap. The flagged Gemini
-vision cache was revalidated with max-model-calls=0 and max-cost-usd=0: one cache hit,
-zero accepted new facts. Missing or undisplayed evidence did not justify another paid pilot.
-Historical live experiments and accounting limitations remain in code/evaluation/usage_report.md.
+The current bounded correction pilot made seven successful live calls (DeepSeek six,
+Gemini vision one), with 76,950 input / 3,056 output tokens and estimated USD 0.02904615.
+case_17 explicitly retrieved its thirteenth observation through the new cursor. Four accepted
+proposals are duplicates; no unique new facts, accepted enrichments or changed predictions.
+Paid experimentation stopped after this pilot. The older zero-budget cache replay was a
+previous iteration. Full details and historical accounting remain in code/evaluation/usage_report.md.
 
 A fresh virtual environment installed requirements-dev.txt, extracted the runnable source ZIP,
 and regenerated all 11 PNG extractions using Windows.Media.Ocr with the English recognizer.

@@ -1,5 +1,11 @@
 # Submission debugging: source matrix and obligation ledger
 
+Final forensic correction: case_34's former REQUIRED_RETAINED_RECORD_MISSING diagnosis
+was overbroad because no resource-specific retention period is supplied. It is now
+RETENTION_CONDITION_UNPROVEN. This historical debugging report records the earlier
+diagnosis; docs/final_forensic_review.md supersedes that interpretation. Counts and CSV
+predictions remain unchanged; the plan/policy gap stays explicit.
+
 Measured 25 October 2026. All rows below come from participant evidence and actual solver diagnostics. Reference answers are used only by the separate evaluator. Full candidate fields, identity validity intervals, acceptance/exclusion reasons and per-resource obligations are in artifacts/submission_debug/case_matrix.json.
 
 ## Measured changes

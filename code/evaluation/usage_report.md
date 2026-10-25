@@ -1,9 +1,71 @@
+# Final sprint — exact selected experimental candidate run
+
+No eligible root output.csv was produced. The actual selected experimental artifact is
+artifacts/final_sprint/submission_candidate.csv, SHA-256
+4263f02a16d30b525c0cc9ff4fb9ee62657ebcb26d8aec65475cef8287b88aab.
+prepare_submission.py --candidate-policy observed-scope recomputed all 518 deterministic
+cases and applied eight explicitly uncertain completion assumptions. It is CSV/JSON-valid
+but only 516/518 contract-valid, not evidence-validated. This report does not claim a
+successful final-output.csv run.
+
+| Provider/model | Calls | Input | Output | Total tokens | Tokens/request | Cost USD | USD/request |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| None: deterministic plus native OCR | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+
+Model cache hits: zero. Local OCR cache reuse is not a provider/model cache hit.
+This sprint made zero new application model calls; native OCR regeneration is local.
+Previous live pilots, cached historical proposals and unknown older usage are historical
+and are not charged again to the candidate. No price rate is needed for zero current
+API cost. No incremental accuracy is attributed to an LLM in this run.
+
+---
+
+# Current agent correction pilot — additional usage
+
+Latest proof-discovery implementation: zero new application model calls, zero input/output/average tokens and USD 0 total/per-request API cost. Provider routes and caps are unchanged. Unit transports are mocked and offline replay reuses historical proposal text without invoking a provider. Actual deterministic full run remains diagnostic, not an eligible output.csv. Prior live totals below are historical, not repeated usage.
+
+Latest submission-recovery run: zero model calls, zero input/output/average tokens, USD 0 total and per-request model cost. All 518 deterministic diagnostic rows were regenerated; no eligible output.csv or submission candidate was produced. Providers/models for this run: none. Prior seven-call pilot usage below is historical and is not charged again by candidate preflight.
+
+The preferred final 518-row candidate is deterministic: zero calls/tokens/USD 0; 510/518
+contract-valid, eight unresolved and one decided plan gap. No eligible root output.csv exists.
+A separate bounded pilot measured the agent, not a fully AI-investigated dataset run:
+
+| Mode / model | Calls | Input tokens | Output tokens | Total tokens | Estimate USD |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| DeepSeek / deepseek-flash; selected 2 of 32 | 6 | 73796 | 2713 | 76509 | 0.02539440 |
+| Gemini / gemini-3.5-flash-lite; selected 1 of 518 | 1 | 3154 | 343 | 3497 | 0.00365175 |
+| Additional pilot total | 7 | 76950 | 3056 | 80006 | 0.02904615 |
+
+All seven calls succeeded; no retries, missing usage or cache hits. DeepSeek configured
+input/output USD per million: 0.30/1.20; Gemini local override: 0.75/3.75. These are estimates
+using recorded configuration, not invoices. Average across all 32 DeepSeek-mode requests:
+2306.125 input, 84.78125 output, 2390.90625 total tokens, USD 0.000793575/request.
+Average across all 518 Gemini-mode requests: 6.088803 input, 0.662162 output, 6.750965 total,
+USD 0.00000704971/request. Only the explicitly selected requests used models.
+Neither mode changed its split predictions. Zero unique new facts/enrichments; four duplicates.
+Paid experimentation stopped. Journals: artifacts/agent_fixes/{text_cache,vision_cache}/usage/.
+
+Adding this pilot to the historical recorded accounting below gives 43 generation attempts,
+335160 reported input / 12967 output tokens, nine old errors with unknown usage, and
+USD 0.33655675 estimated/reserved cost. The earlier interrupted unjournaled run and two
+model-discovery GET calls remain separate; this is not an exact invoice/all-session total.
+The historical interrupted reservation remains at most twelve extra attempts/USD 0.50.
+
+## Historical usage before the current correction pilot
+
 # Application model usage — 25 October 2026
 
 The latest 518-row deterministic run used **zero model calls, zero input/output tokens,
-USD 0 model cost**, averaging zero tokens/cost per request. It took 40.71 seconds and yielded
+USD 0 model cost**, averaging zero tokens/cost per request. It took 23.83 seconds and yielded
 510 contract-valid rows and eight unresolved rows. No eligible final submission output.csv was
 produced; this is the latest diagnostic full run, not an accepted submission run.
+
+Final forensic iteration: zero new Gemini/DeepSeek calls, zero input/output tokens and
+USD 0 new model cost. Existing traces were reviewed; original screenshot pixels confirmed
+missing fields and the catalog identity conflict, so no paid model could establish the
+missing facts. Fresh-environment native OCR and clean-package runs are local, not API usage.
+Conditional-retention diagnostics were corrected without changing predictions. The prior
+iteration's zero-budget cache revalidation and older paid pilots below remain historical.
 
 Submission-debugging iteration: no new paid calls, zero new input/output tokens and zero
 new model cost. A targeted Gemini screenshot investigation used one existing cache entry,

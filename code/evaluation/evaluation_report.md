@@ -1,4 +1,77 @@
-# Current submission-oriented debugging evaluation
+# Final submission sprint — authoritative current measurements
+
+305 tests pass. Clause/object-aware multilingual authorization and identifier-coverage
+checks were corrected; all 32 sample and 518 strict CSV predictions remain unchanged.
+Actual before/after: status 90.625% / 90.625%; exact-case and sequence 28.125% / 28.125%;
+step precision 97.546012% / 97.546012%; recall 82.383420% / 82.383420%;
+F1 89.325843% / 89.325843%; field 77.447426% / 77.447426%.
+Sample contract validity remains 29/32; full strict validity 510/518, with eight unresolved
+verdicts and one additional conditional plan gap. Sample reference false-COMPLETE is zero;
+full hidden-label false-COMPLETE count is unknown.
+
+The actual separate observed-scope candidate has 518 sorted rows, valid CSV/JSON and
+allowed status strings, but only 516/518 pass strict contract checks. Eight COMPLETE
+judgments explicitly assume unresolved obligations compliant. case_55 and case_63 lack
+admissible verification and fail STATUS_SHAPE. No evidence/resource/operation was invented.
+This is not measured accuracy improvement or a fully evidence-validated output.csv.
+
+34 missing sample verification steps remain: 17 without grounded subject links, eight
+post-cutoff-only links, seven anonymized records without historical ownership and two
+retained records without admissible links. The grounded object_19 steps remain.
+See docs/final_submission_sprint.md for exact commands and remaining blockers.
+Three independent custom business cases and historical results are retained below.
+
+---
+
+# Agent correction iteration — current results
+
+Latest proof-discovery iteration: five read-only tools, exact structured/foreign-key relations, pointer-bound scalar extraction and validated visible boolean fields are implemented. Independent fixture tests demonstrate new grounded facts changing a business verdict; this is not a public-sample or live-model gain. Actual recorded-proposal replay yields four duplicates/five rejected facts, zero status/step changes. Deterministic sample/full metrics remain unchanged. No new API calls were made. See docs/agent_capabilities.md for constraints and reproducible tests.
+
+Latest submission-recovery check: 235 tests pass; sample metrics below are unchanged. Candidate preflight is blocked on eight unresolved verdicts and one conditional plan gap. No status/step was invented and no output.csv was produced. Full sample mismatch breakdown and checklist: docs/submission_recovery.md. The prior agent pilot below remains historical.
+
+The bounded live pilot and regression fixes are documented in docs/agent_corrections_readiness.md.
+All 32 sample rows were evaluated: deterministic vs DeepSeek selected-case mode are byte-identical.
+Status 90.625%; exact-case/sequence 28.125%; precision 97.546012%; recall 82.383420%; F1
+89.325843%; field 77.447426%; 29/32 sample contract-valid. The Gemini case_63 full run is
+byte-identical to the 518-row baseline: 510/518 valid, eight unresolved, one decided plan gap.
+No AI accuracy gain: zero unique new facts, zero accepted enrichments, four duplicate proposals.
+Both providers succeeded live. Seven calls; 76,950 input / 3,056 output tokens; estimated
+USD 0.02904615. Paid experimentation stopped after this pilot. All 232 tests pass.
+The three independently specified business cases and prior evaluator definitions below remain
+unchanged. Root output.csv is withheld by the strict publication guard.
+
+## Historical evaluation iterations
+
+# Final forensic correctness evaluation
+
+Actual 32-sample evaluation: before/after unchanged. Status 90.625%; exact-case 28.125%;
+step precision 97.546012%, recall 82.383420%, F1 89.325843%; field 77.447426%; sequence
+28.125%; sample validity 29/32. Full validity remains 510/518 with eight unresolved and
+one decided conditional-plan gap. No eligible output.csv was published.
+
+**224 tests passed in 45.29s**; the fresh dependency environment also passed all 224 tests
+in 32.58s. The two new tests distinguish absent security/legal records with unproven
+retention/hold conditions from genuine retained-record breaches, including expiry/inactivity.
+All preceding independent replica, tombstone and access-only business cases remain passing.
+
+The general policy fix changes case_34 from REQUIRED_RETAINED_RECORD_MISSING to
+RETENTION_CONDITION_UNPROVEN: the supplied readback/negative provides no retention period
+for audit_record_3753. An unrelated inventory row's deadline cannot create this obligation.
+A valid resource-specific deadline/active hold still triggers the missing-retained-record
+diagnostic, with no invented restoration operation. CSV predictions are unchanged.
+
+docs/final_forensic_review.md quotes the official completeness, finding, citation and
+cutoff passages and includes the eight forensic matrices, current policy interpretation,
+sample discrepancy decision and official-clarification questions. Machine matrices include
+anonymous/other-subject rows from relevant partial exports, explicitly rejected as joins.
+There is no supplied fallback that turns unknown proof into a supported INCOMPLETE plan.
+
+No new application model calls or measured AI gain. The three object_19 steps remain:
+literal sole ownership plus positive file metadata supports them, subject to the stated
+last-observation persistence interpretation. The reference mismatch is not suppressed.
+Historical metrics and all prior failures follow below.
+
+## Previous submission-oriented debugging evaluation
 
 25 October 2026. All metrics are actual public-sample predictions, not self-test values.
 

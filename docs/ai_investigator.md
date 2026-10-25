@@ -1,3 +1,7 @@
+> Current proof-discovery capabilities: five read-only tools, validated relation/field proposals and bounded draft feedback. See [agent_capabilities.md](agent_capabilities.md). Earlier implementation and paid-run narratives below are historical.
+
+> Current agent corrections: **232 tests**, seven successful live calls, zero incremental prediction gain; validity remains **510/518** with eight unresolved and case_34 conditional plan gap. See [agent_corrections_readiness.md](agent_corrections_readiness.md). Previous iteration narratives below are historical.
+
 # Optional AI investigation — measured 25 October 2026
 
 Current submission-debugging result: 510/518 contract-valid, eight unresolved and one
