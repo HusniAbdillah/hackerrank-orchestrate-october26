@@ -97,6 +97,7 @@ def test_custom_tombstone_and_future_capture():
     # Independent case 2: retain stable reference, redact PII, ignore a later capture
     # even when it embeds an earlier business timestamp.
     clean = obs("ACCOUNT_TOMBSTONE", {"user_id": "user_fixture", "email": None, "name": None,
+                 "phone": None, "email_hash": None,
                  "account_status": "DELETED"}, "reference", "identity_service")
     dirty = replace(clean, fields={**clean.fields, "email": "person@example.test"},
                     captured_at=timestamp("2026-02-02T00:00:00Z"))

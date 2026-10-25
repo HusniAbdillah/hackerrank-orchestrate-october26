@@ -26,27 +26,49 @@ def boolean(value):
     return None
 
 
-def exposed(fields: dict, *, anonymize=False) -> bool | None:
-    if "direct_identifiers" in fields:
-        return str(fields["direct_identifiers"]) != "0"
+def exposed(fields: dict, *, anonymize=False, category=None) -> bool | None:
+    """False requires coverage or a direct readback certificate, not omitted keys.
+
+    Coverage is category-specific: support exports contain requester contacts;
+    analytics exports contain email/phone/hash and a subject-link slot. Extra
+    identifying fields always override a clean certificate.
+    """
     keys = {"name", "full_name", "display_name", "email", "phone", "email_hash", "requester_name",
             "requester_email", "requester_phone", "owner_email", "owner_phone", "customer_email"}
     if anonymize:
-        keys |= {"user_id", "customer_reference", "subject_reference"}
+        keys |= {"user_id", "customer_reference", "subject_reference", "subject_ref", "customer_id"}
     present = [value for key, value in fields.items() if key in keys]
     if any(value not in (None, "", "null", "[REDACTED]", "REDACTED") for value in present):
         return True
-    if fields.get("message_text") == "[REDACTED]":
-        return False
     # Conversation exports can embed literal contact details in the message body
     # while omitting requester_email/phone columns. Missing columns are not proof
     # of redaction. Stable subject references outside this text remain permitted.
     if any(kind in {"email", "phone", "email_hash"}
-           for kind, _ in identifiers({"text": fields.get("message_text", "")})):
+           for kind, _ in identifiers({"text": [fields.get("message_text", ""), fields.get("message_excerpt", "")]})):
         return True
     if fields.get("matched_value") not in (None, "", "null"):
         return True
-    if present:
+    if "direct_identifiers" in fields:
+        count = str(fields["direct_identifiers"])
+        if count == "0":
+            return False
+        if count.isdigit():
+            return True
+    if fields.get("message_text") == "[REDACTED]" and not anonymize:
+        return False
+    name = {"name", "full_name", "display_name", "requester_name"}
+    email = {"email", "requester_email", "owner_email", "customer_email"}
+    phone = {"phone", "requester_phone", "owner_phone"}
+    groups = [name, email, phone, {"email_hash"}]
+    if category in {"ANALYTICS_PROFILE", "PRODUCT_TELEMETRY"}:
+        groups = [email, phone, {"email_hash"}]
+    elif category == "SUPPORT_MESSAGE":
+        groups = [name, email, phone]
+    elif category == "EMAIL_DELIVERY_LOG":
+        groups = [email]
+    if anonymize:
+        groups.append({"user_id", "customer_reference", "subject_reference", "subject_ref", "customer_id"})
+    if all(group.intersection(fields) for group in groups):
         return False
     return None
 
@@ -59,6 +81,11 @@ def observed_state(obs: Observation) -> str | None:
     states = {"NOT_FOUND": "ABSENT", "FOUND": "PRESENT", "IDENTIFIABLE": "IDENTIFIABLE",
               "ANONYMIZED": "ANONYMIZED", "REDACTED": "REDACTED", "ACTIVE": "ACTIVE",
               "DISABLED": "DISABLED", "BLOCKED": "BLOCKED"}
+    if result in {"REDACTED", "ANONYMIZED"}:
+        # A resulting-state readback is a certificate, but literal remaining
+        # identifiers take precedence over its label, including stable links.
+        pii = exposed(fields, anonymize=result == "ANONYMIZED", category=obs.category)
+        return "IDENTIFIABLE" if pii is True else states[result]
     if result in states:
         return states[result]
     if obs.kind == "scoped_negative":
@@ -73,7 +100,7 @@ def observed_state(obs: Observation) -> str | None:
             flag = False
         return "ACTIVE" if flag is True else "BLOCKED" if flag is False else None
     if category in {"ANALYTICS_PROFILE", "PRODUCT_TELEMETRY", "SUPPORT_MESSAGE", "ACCOUNT_TOMBSTONE", "EMAIL_DELIVERY_LOG"}:
-        pii = exposed(fields, anonymize=category in {"ANALYTICS_PROFILE", "PRODUCT_TELEMETRY"})
+        pii = exposed(fields, anonymize=category in {"ANALYTICS_PROFILE", "PRODUCT_TELEMETRY"}, category=category)
         return "IDENTIFIABLE" if pii is True else (
             "ANONYMIZED" if category in {"ANALYTICS_PROFILE", "PRODUCT_TELEMETRY"} else "REDACTED"
         ) if pii is False else None

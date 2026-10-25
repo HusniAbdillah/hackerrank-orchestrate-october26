@@ -11,6 +11,35 @@ class Authorization:
     reason: str
 
 
+def _account_clauses(value: str) -> tuple[bool, bool]:
+    """Bind explicit deletion/negation to its account object, across languages.
+
+    Keeping an invoice is not a veto on deleting an account. Contradictory
+    instructions about the account itself must not be resolved as consent.
+    """
+    clauses = re.split(r"[.!?;,\n。！？；，]|\b(?:but|however|pero|mais|mas|tetapi|namun)\b", value)
+    target = re.compile(
+        r"(?:delete|erase|remove|close)\s+(?:(?:my|the|this|permanently)\s+){0,4}(?:account|profile|personal data)\b|"
+        r"(?:eliminar|elimina|borra|borres|elimines)\s+(?:mi\s+)?cuenta\b|"
+        r"(?:supprimer|supprimez)\s+(?:(?:mon|le|votre)\s+)?compte\b|"
+        r"(?:excluir|exclua|apagar|apague)\s+(?:(?:a|minha)\s+){0,2}conta\b|"
+        r"(?:hapus|menghapus)\s+(?:akun|profil|data pribadi)\b|"
+        r"アカウント[^。！？]{0,20}削除|계정[^。！？]{0,20}삭제|(?:删除|刪除)[^。！？]{0,8}(?:账户|帳戶)")
+    negation = re.compile(
+        r"\b(?:do not|don't|never|not asking|not a request|not requesting|without|"
+        r"no|ne|pas|nao|jangan)\b|削除しない|삭제하지|不要|하지 마")
+    positive = negative = False
+    for clause in clauses:
+        if re.search(r"(?:keep|leave).*(?:account|profile).*(?:active|in place|as it is)", clause):
+            negative = True
+        if target.search(clause):
+            if negation.search(clause):
+                negative = True
+            else:
+                positive = True
+    return positive, negative
+
+
 def authorize(text: str) -> Authorization:
     value = unicodedata.normalize("NFKD", text.casefold()).replace("’", "'")
     value = "".join(c for c in value if not unicodedata.combining(c))
@@ -40,15 +69,13 @@ def authorize(text: str) -> Authorization:
         r"no (?:elimines|eliminar|borres)|ne supprimez pas|nao (?:exclua|apague)|"
         r"削除しない|삭제하지|不要删除|jangan (?:hapus|menghapus)", value
     ))
+    explicit, account_veto = _account_clauses(value)
+    if explicit and account_veto:
+        return Authorization(None, "Conflicting deletion and preservation instructions for the account")
     if negative:
-        # Specific full-deletion requests can coexist with retention instructions, but
-        # negating account deletion is never overridden by a keyword in that same sentence.
-        clauses = re.split(r"[.!?\n]", value)
-        explicit = any(re.search(r"(?:please|i want to) (?:permanently )?(?:delete|erase) my account", c)
-                       and not re.search(r"do not|don't|not asking|not a request", c) for c in clauses)
-        if not explicit:
+        if not explicit or account_veto:
             return Authorization(False, "Explicit non-deletion, correction, access, or limited opt-out request")
-    if positive:
+    if positive or explicit:
         return Authorization(True, "Explicit account/data deletion or requested deletion audit")
     if re.search(r"(?:copy|download|portable|information request|what personal information|invoices for my records|correct|misspelled|continue using)", value):
         return Authorization(False, "Access, portability, correction, or continued-account-use request")

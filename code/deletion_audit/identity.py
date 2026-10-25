@@ -1,6 +1,7 @@
 """Exact, temporal identity indexes and evidence-grounded resource ownership links."""
 
 from collections import defaultdict
+from copy import copy
 from dataclasses import dataclass, replace
 from datetime import datetime
 from pathlib import Path
@@ -86,6 +87,12 @@ class IdentityGraph:
     def load(cls, dataset: Path) -> "IdentityGraph":
         return cls(read_csv(dataset / "user_identities.csv", IDENTITY_FIELDS),
                    read_csv(dataset / "user_audit_log.csv", AUDIT_FIELDS))
+
+    def fork(self):
+        """Share immutable identifier indexes, isolate per-case ownership memoization."""
+        graph = copy(self)
+        graph._ownership_cache = {}
+        return graph
 
     def matching_versions(self, kind: str, value: str, at: datetime) -> list[IdentifierVersion]:
         return [replace(v, valid_to=None if v.valid_to and v.valid_to > at else v.valid_to)

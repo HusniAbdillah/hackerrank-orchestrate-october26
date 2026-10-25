@@ -13,6 +13,8 @@ CAUSES = {
     "INGESTION_COVERAGE_INCOMPLETE": ("unsupported_source_parsing", "Repair the reported source parser before using its scope as proof."),
     "REQUIRED_KEPT_RECORD_MISSING": ("policy_ambiguity", "Check whether the absence is truly subject/copy scoped and whether policy requires continued retention; no restoration operation is allowed by the output contract."),
     "REQUIRED_RETAINED_RECORD_MISSING": ("policy_ambiguity", "Confirm the negative scope and retention obligation; do not invent an unsupported restore operation."),
+    "RETENTION_CONDITION_UNPROVEN": ("policy_ambiguity", "Locate an admissible retention period for this exact resource; do not borrow another record's deadline or infer a restore obligation from absence alone."),
+    "LEGAL_HOLD_CONDITION_UNPROVEN": ("policy_ambiguity", "Establish an active legal hold on this exact resource at audit_at before asserting a retention breach."),
     "UNKNOWN_INTENT": ("authorization_uncertain", "Read the original request language and resolve explicit deletion authorization before any destructive plan."),
 }
 

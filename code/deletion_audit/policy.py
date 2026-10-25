@@ -54,6 +54,13 @@ class Policy:
             if fields.get("hold_active") is False:
                 return Decision(rid, None, None, None, "LEGAL_HOLD_INACTIVE_NO_FALLBACK_RULE")
             if state == "ABSENT":
+                # Absence alone does not establish a conditional retention breach.
+                # In particular, a projected negative must not borrow the deadline
+                # or hold of a different row in its source inventory.
+                if category == "SECURITY_AUDIT_LOG" and not deadline:
+                    return Decision(rid, None, None, None, "RETENTION_CONDITION_UNPROVEN")
+                if category == "LEGAL_HOLD_RECORD" and fields.get("hold_active") is not True:
+                    return Decision(rid, None, None, None, "LEGAL_HOLD_CONDITION_UNPROVEN")
                 return Decision(rid, None, None, None, "REQUIRED_RETAINED_RECORD_MISSING")
             # The supplied security readback/register category is the retention context;
             # never invent a deadline when the exported row has none.

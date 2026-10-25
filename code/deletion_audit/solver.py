@@ -63,7 +63,7 @@ def scope_negatives(store, keys, at):
     extra = []
     scopes = {}
     for obs in store.observations:
-        if not obs.admissible(at) or obs.file_id is None:
+        if not obs.admissible(at) or obs.file_id is None or obs.scope.get("agent_row_only"):
             continue
         table = obs.scope.get("table")
         if table and table != "snapshot_scope" and obs.kind != "missing_data":
@@ -112,6 +112,7 @@ def profile_scope_proofs(store, at, graph=None, user=None):
         inventories = {}
         for observation in store.observations:
             if (observation.admissible(at) and observation.category == "USER_PROFILE"
+                and not observation.scope.get("agent_row_only")
                 and observation.resource_id and observation.scope.get("table") == "customer_profiles"
                 and any(r.get("origin_system") == "account_service" for r in observation.scope.get("snapshot_scope", []))):
                 inventories.setdefault((observation.file_id, observation.observed_at), []).append(observation)
@@ -209,6 +210,9 @@ def audit(request, store, graph, policy):
         # The output vocabulary has no UNKNOWN. Emit a visible abstention rather than
         # fabricated findings or a COMPLETE claim. Validator failures remain observable.
         if status == "COMPLETE":
+            # Preserve only already grounded partial checks for an explicitly
+            # separate candidate workflow. They do not establish full completion.
+            diagnostic["grounded_partial_steps"] = steps
             status = "INCOMPLETE"
             steps = []
             diagnostic["abstained"] = True
@@ -260,13 +264,20 @@ def solve(dataset: Path, split: str, output: Path, extractions: Path | None = No
             from .investigator import AuditTools
             accepted = ai.investigate(AuditTools(request, store, graph, policy), decision.diagnostic)
             if accepted:
-                from .observations import EvidenceStore
-                local = EvidenceStore(files=store.files, issues=store.issues, source_text=store.source_text)
-                local.add(store.observations)
-                local.add(accepted)
-                updated = decide_case(request, local, graph, policy)
+                from .proposals import apply_grounded_updates
+                local = apply_grounded_updates(store, accepted, request.audit_at)
+                updated = decide_case(request, local, graph.fork(), policy)
                 updated.diagnostic["baseline_status"] = decision.status
                 updated.diagnostic["accepted_ai_observations"] = [o.observation_id for o in accepted]
+                old_issues = {i["code"] for i in decision.diagnostic["issues"]}
+                new_issues = {i["code"] for i in updated.diagnostic["issues"]}
+                updated.diagnostic["ai_effects"] = {
+                    "status_changed": updated.status != decision.status,
+                    "steps_changed": updated.steps != decision.steps,
+                    "resolved_issue_codes": sorted(old_issues - new_issues),
+                    "introduced_issue_codes": sorted(new_issues - old_issues),
+                    "resource_links_added": sorted(set(map(tuple, updated.diagnostic["resource_keys"])) -
+                                                   set(map(tuple, decision.diagnostic["resource_keys"]))) }
                 decision = updated
         rows.append({"case_id": cid, "deletion_status": decision.status or "", "steps_json": json.dumps(decision.steps, separators=(",", ":"))})
         cases.append(decision.diagnostic)
