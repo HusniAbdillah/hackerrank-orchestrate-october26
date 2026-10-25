@@ -16,7 +16,7 @@ from deletion_audit.solver import decide_case, enrich, scope_negatives
 from deletion_audit.state import reconstruct, observed_state
 
 
-def diagnose(dataset, before, extractions=None):
+def diagnose(dataset, before, extractions=None, include_file_context=False):
     store = ingest(dataset); enrich(store)
     if extractions:
         apply_cached_screens(store, extractions)
@@ -53,6 +53,11 @@ def diagnose(dataset, before, extractions=None):
         observations += scope_negatives(store, keys, request.audit_at)
         for observation in observations:
             candidates[observation.observation_id] = observation
+        if include_file_context:
+            files = {o.file_id for o in candidates.values() if o.file_id and o.admissible(request.audit_at)}
+            for observation in store.observations:
+                if observation.file_id in files:
+                    candidates[observation.observation_id] = observation
         resources, _ = reconstruct(observations, request.audit_at)
         selected = {o.observation_id for resource in resources for o in resource.copies}
         candidate_rows = []
@@ -62,7 +67,9 @@ def diagnose(dataset, before, extractions=None):
             if observation.observed_at is None: reasons.append("OBSERVATION_TIME_UNKNOWN")
             elif observation.observed_at > request.audit_at: reasons.append("EVENT_AFTER_CUTOFF")
             if not reasons:
-                reasons.append("SELECTED_COPY_STATE" if observation.observation_id in selected else
+                unlinked = observation.resource_id and (observation.system_id, observation.resource_id) not in keys
+                reasons.append("NO_EXACT_SUBJECT_OWNERSHIP_LINK" if unlinked else
+                    "SELECTED_COPY_STATE" if observation.observation_id in selected else
                     "ACTIVITY_IS_CLAIM_OR_OWNERSHIP_METADATA" if observation.kind == "reported_claim" else
                     "SCOPED_CONTEXT_NOT_DIRECT_STATE" if observed_state(observation) is None else
                     "ADMISSIBLE_HISTORY_OR_OTHER_RESOURCE")
@@ -104,10 +111,11 @@ if __name__ == "__main__":
     parser.add_argument("--dataset", type=Path, default=Path(__file__).resolve().parents[2]/"dataset")
     parser.add_argument("--before", type=Path, required=True)
     parser.add_argument("--extractions", type=Path)
+    parser.add_argument("--include-file-context", action="store_true", help="Include anonymous/other-subject rows from relevant admissible files as rejected join candidates")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     protect_output(args.output, args.dataset, args.before)
-    report = diagnose(args.dataset, json.loads(args.before.read_text()), args.extractions)
+    report = diagnose(args.dataset, json.loads(args.before.read_text()), args.extractions, args.include_file_context)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2, ensure_ascii=False)+"\n", encoding="utf-8", newline="\n")
     print(json.dumps({"original_unresolved": report["baseline_unresolved"], "original_incomplete_plans": report["baseline_decided_with_issues"], "cases_examined": len(report["cases"])}))
