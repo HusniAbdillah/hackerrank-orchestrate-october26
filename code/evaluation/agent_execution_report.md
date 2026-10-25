@@ -1,3 +1,5 @@
+> Provenance: proof_quality/agent_sample_run is the CURRENT four-call Proof Ledger pilot. active_agent/agent_full_run is the HISTORICAL nine-call full audit from the preceding iteration. Neither is falsely attributed to the current root-output materialization, which used zero model calls after the stop decision. See usage_report.md.
+
 # Actual runtime AI audit investigations
 
 Generated from recorded application runs, not a scripted demonstration. No hidden chain-of-thought is logged.
