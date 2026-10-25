@@ -422,3 +422,120 @@ repo_root=D:\Hackathon\hackerrank-orchestrate-october26
 worktree=D:\Hackathon\hackerrank-orchestrate-october26
 parent_agent=none
 
+
+## [2026-10-24T17:32:11.673094+00:00] Improve submission readiness and preserve unresolved evidence diagnostics
+
+User Prompt (verbatim, secrets redacted):
+# Context from my IDE setup:
+
+## Active file: artifacts/sample_solver_report.json
+
+## Open tabs:
+- sample_solver_report.json: artifacts/sample_solver_report.json
+- support_replica.log: dataset/evidence/logs/support_replica.log
+- log.txt: log.txt
+- taste.md: .commandcode/taste/taste.md
+- ingestion_identity.md: docs/ingestion_identity.md
+
+## My request:
+Continue the HackerRank Orchestrate Ghost Data Still Exists repository.
+
+Read the actual implementation, dataset analysis, solver report, evaluation diagnostics, problem statement, and all agent trace instructions.
+
+CURRENT STATE:
+- 152 tests passed.
+- 32 actual sample predictions generated.
+- Sample status accuracy: 75%.
+- Exact-case accuracy: 28.125%.
+- Step precision/recall/F1: 99.315% / 75.130% / 85.546%.
+- Field accuracy: 72.607%.
+- 24/32 contract-valid sample rows.
+- Full run: 518 output rows, but 110 abstentions and only 408 contract-valid rows.
+- No application LLM calls yet.
+
+PRIMARY OBJECTIVE:
+Make the first submission-contract-compliant 518-case output while preserving evidence integrity and diagnosing rather than concealing uncertainty.
+
+WORKFLOW:
+1. Inspect every sample abstention and aggregate all 110 full-run abstentions by root cause.
+2. Identify whether each issue is caused by missing ownership, absent verification evidence, invalid temporal joins, inadequate scoped negative evidence, unsupported source parsing, or policy ambiguity.
+3. Fix evidence-backed resource ownership and temporal reconstruction using general reusable logic, not sample-case-specific mappings.
+4. Distinguish true non-deletion requests from deletion requests with missing evidence.
+5. Implement rigorous evidence sufficiency checks without inventing evidence, operations, resources, or citations.
+6. Preserve internal unresolved/uncertainty diagnostics separately from the submission schema. Do not blindly coerce UNKNOWN to COMPLETE or INCOMPLETE.
+7. Complete missing final-state verification scope, including retained records, anonymized resources, and replicas when grounded.
+8. Run both sample and full solver, strict validation, evaluator, and all tests.
+9. Prepare a clean interface for a future optional AI Audit Investigator with read-only tools: search_evidence, trace_identity, inspect_timeline, and explain_policy. Do not introduce unnecessary framework complexity.
+
+IMPORTANT:
+- Never read sample_output.csv in prediction logic.
+- Never fabricate evidence IDs, resource ownership, or record states.
+- Preserve all dataset files and required logs.
+- Keep all existing tests passing.
+- If some cases cannot be resolved, report them transparently; do not falsely claim full contract validity.
+- Prioritize measurable improvement over refactoring.
+
+DELIVERABLES:
+- Real sample status accuracy, exact-case accuracy, step F1, field accuracy, and sequence accuracy.
+- Contract-valid sample and full row counts.
+- Number of unresolved cases, grouped by cause.
+- Per-case diagnostic report with proposed next actions.
+- Changed files and regression test results.
+- Exact remaining work for integrating the AI investigator.
+
+Do not stop at analysis; implement and test the improvements.
+
+
+Agent Response Summary:
+Inspected every sample abstention and all 110 original full-run abstentions; implemented SHA-256-bound optional native Windows OCR caches, narrow source adapters, explicit copy reconstruction, a signed-journal PDF readback, and OCR ownership corroboration. Five previously unresolved full cases now have grounded findings and plans, improving contract-valid rows from 408/518 to 413/518; 105 verdicts remain unresolved, with 126 cases having some incomplete proof or plan scope. Actual sample metrics remain status 75%, exact-case/sequence 28.125%, step precision 99.315%, recall 75.130%, F1 85.546%, and field accuracy 72.607%, with 24/32 valid rows. Added nullable internal AuditDecision status, separate per-case cause/action diagnostics, guarded atomic submission publication, and a read-only cutoff-bound investigator interface without any model calls; unresolved rows are no longer coerced into INCOMPLETE labels. All 185 tests and the controlled evaluator self-test pass, all 103 dataset hashes and inventory counts remain unchanged, and publication of output.csv was correctly blocked rather than falsely claiming a complete submission.
+
+Actions:
+* Read AGENTS.md, CLAUDE.md, problem_statement.md, agent_trace_instructions.md, dataset/ingestion/solver analysis, actual source, baseline reports, and existing tests; preserved active traces in place.
+* Added extractions.py, ocr_cache.py, sufficiency.py, investigator.py, code/tools/extract_png.ps1, and evaluation/abstentions.py.
+* Updated solver.py, state.py, CLI, evaluation-only mismatch diagnostics, and regression tests; added test_extractions.py and test_investigator.py.
+* Extracted all eleven images locally with Windows.Media.Ocr: eight typed overlays and three text/context-only results; withheld the uncorroborated marketing subject instead of repairing OCR identifiers or trusting a conflicting catalog claim.
+* Generated all 32 sample and 518 full diagnostic rows; ran strict validation, actual sample evaluation, full/sample abstention comparisons, ingest inventory checks, controlled evaluator self-test, and all 185 tests.
+* Generated artifacts/full_abstention_review.json, sample_abstention_review.json, sample_mismatches.json, both solver reports, OCR caches/report, validation/evaluation reports, and iteration_dataset_integrity.json outside dataset/.
+* Added docs/submission_readiness.md; updated README, historical baseline pointers, evaluation and usage reports with actual results, exact commands, limitations, and remaining AI adapter/grounding/usage work.
+* Verified git diff --check and unchanged hashes for all 103 original files; no API credentials, model provider, frontend, framework, commit, external submission, or active trace archive was added.
+
+Context:
+tool=Codex Desktop
+model=gpt-6.1-sol
+branch=main
+repo_root=D:\Hackathon\hackerrank-orchestrate-october26
+worktree=D:\Hackathon\hackerrank-orchestrate-october26
+parent_agent=none
+
+## [2026-10-25T03:22:44.996495+00:00] Explain actual OCR workflow and limitations
+
+User Prompt (verbatim, secrets redacted):
+# Context from my IDE setup:
+
+## Active file: code/deletion_audit/authorization.py
+
+## Open tabs:
+- authorization.py: code/deletion_audit/authorization.py
+- evaluator.py: code/deletion_audit/evaluator.py
+- inputs.py: code/deletion_audit/inputs.py
+- investigator.py: code/deletion_audit/investigator.py
+- test_identity.py: tests/test_identity.py
+
+## My request:
+how about your workflow, spesifically OCR?
+
+
+Agent Response Summary:
+Verified the OCR runner, native Windows script, extraction adapters, solver identity guard and latest cache report before explaining the workflow. Explained manifest-driven local extraction, raw text/word-box caching and hash validation, layout-dependent business adapters, identity/cutoff checks, eight candidate structured screens versus three context-only screens, and five full-run cases resolved. Clarified that OCR has no supplied confidence scores, currently uses the English recognizer and known resource IDs, and makes no model API calls; no implementation or dataset changes were needed.
+
+Actions:
+* Read code/deletion_audit/ocr_cache.py, extractions.py, code/tools/extract_png.ps1, solver OCR guard, and artifacts/ocr_run.json.
+* Appended and verified this turn in log.txt; preserved original dataset and active structured trace.
+
+Context:
+tool=Codex Desktop
+model=gpt-6.1-sol
+branch=main
+repo_root=D:\Hackathon\hackerrank-orchestrate-october26
+worktree=D:\Hackathon\hackerrank-orchestrate-october26
+parent_agent=none
